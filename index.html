@@ -45,7 +45,14 @@
     --safe-r:env(safe-area-inset-right,0px);
   }
   *{margin:0;padding:0;box-sizing:border-box}
+  ::selection{background:var(--velvet);color:var(--ivory)}
+  html{scrollbar-color:rgba(224,164,88,.35) #07060B;scrollbar-width:thin}
+  ::-webkit-scrollbar{width:9px}
+  ::-webkit-scrollbar-track{background:#07060B}
+  ::-webkit-scrollbar-thumb{background:rgba(224,164,88,.3);border-radius:5px;border:2px solid #07060B}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(224,164,88,.5)}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  h1,h2,h3,.mvt-head h2,.coda h2{font-kerning:normal;font-feature-settings:'kern' 1,'liga' 1;text-rendering:optimizeLegibility;text-wrap:balance}
   body{
     background:var(--nave);color:var(--ivory);
     font-family:'Archivo',system-ui,-apple-system,sans-serif;
@@ -72,6 +79,8 @@
   figcaption{position:absolute;left:0;bottom:0;z-index:3;padding:12px 16px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,231,208,.6)}
 
   #stage{position:fixed;inset:0;z-index:1;pointer-events:none}
+  #grain{position:fixed;inset:0;z-index:56;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
   #flamelight{position:fixed;inset:-12%;z-index:55;pointer-events:none;opacity:.6;
     background:
       radial-gradient(58% 44% at 50% 46%,rgba(224,164,88,.075) 0%,rgba(224,164,88,.028) 45%,rgba(224,164,88,0) 72%),
@@ -129,6 +138,12 @@
   .mvt-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:clamp(30px,5vh,60px);border-bottom:1px solid var(--hairline);padding-bottom:18px}
   @media(min-width:761px){.mvt-head{gap:22px;padding-bottom:22px}}
   .mvt-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,5vw,30px);color:var(--flame);min-width:2ch}
+  /* the engraved numeral — a ghost of the movement number behind its head */
+  .mvt-head{position:relative}
+  .mvt-head::before{content:attr(data-num);position:absolute;right:-.04em;bottom:-.18em;z-index:-1;
+    font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(110px,22vw,220px);line-height:1;
+    color:transparent;-webkit-text-stroke:1px rgba(224,164,88,.14);pointer-events:none;user-select:none}
+  @supports not (-webkit-text-stroke:1px red){.mvt-head::before{color:rgba(224,164,88,.06)}}
   .mvt-head h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(29px,7.5vw,52px);line-height:1.04}
   .mvt-head .tempo{margin-left:auto;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--smoke);white-space:nowrap}
   @media(max-width:760px){.mvt-head .tempo{display:none}}
@@ -295,6 +310,10 @@
   .coda > *{position:relative;z-index:3}
   .coda h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,8.5vw,64px);line-height:1.06;max-width:16ch;margin:0 auto 16px}
   .coda h2 em{font-style:italic;color:var(--flame)}
+  .flourished{position:relative;display:inline-block}
+  .flourish{position:absolute;left:2%;right:0;bottom:-.14em;width:96%;height:.34em;color:var(--flame);opacity:.85}
+  .flourish path{stroke-dasharray:330;stroke-dashoffset:330}
+  @media (prefers-reduced-motion: reduce){.flourish path{stroke-dashoffset:0}}
   .coda p{color:var(--body);max-width:42ch;margin:0 auto 34px;font-size:clamp(15px,3.8vw,17px)}
   .coda .listen-row{align-items:stretch}
   @media(min-width:521px){.coda .listen-row{justify-content:center}}
@@ -391,6 +410,7 @@
 <!-- the candle's veil: one warm bloom over the whole room, breathing on the
      flame clock. Pure opacity per frame — compositor only. -->
 <div id="flamelight" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
 
 <header id="topbar">
   <a class="wordmark" href="#top">Locrian<span>.</span></a>
@@ -438,7 +458,7 @@
 
   <section class="movement" id="ensemble">
     <div class="inner">
-      <div class="mvt-head reveal"><span class="mvt-num">I.</span><h2>The Ensemble</h2><span class="tempo">Andante — with warmth</span></div>
+      <div class="mvt-head reveal" data-num="I"><span class="mvt-num">I.</span><h2>The Ensemble</h2><span class="tempo">Andante — with warmth</span></div>
       <div class="cols">
         <div class="reveal">
           <p><strong>Formed by cellist Justin Pearson</strong>, the Locrian Ensemble of London draws together some of the capital's most prominent string soloists — players whose individual flair shapes every performance of the great chamber and orchestral repertoire.</p>
@@ -493,7 +513,7 @@
         srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/960px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/1280px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png 1280w" alt="">
     </figure>
     <div class="inner">
-      <div class="mvt-head reveal"><span class="mvt-num">II.</span><h2>By Candlelight</h2><span class="tempo">Allegro — by flame</span></div>
+      <div class="mvt-head reveal" data-num="II"><span class="mvt-num">II.</span><h2>By Candlelight</h2><span class="tempo">Allegro — by flame</span></div>
       <ul class="rep reveal" id="repList">
         <li><button data-note="0" data-phrase="seasons"><span class="composer">Vivaldi</span><span class="work">The Four Seasons</span><span class="note">the signature evening</span></button><span class="pluckline"></span></li>
         <li><button data-note="2" data-phrase="air"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Air 'on the G String'</span><span class="note">by candlelight</span></button><span class="pluckline"></span></li>
@@ -508,7 +528,7 @@
 
   <section class="gallery-wrap" id="gallery">
     <div class="gallery-head inner">
-      <div class="mvt-head reveal"><span class="mvt-num">III.</span><h2>The Room</h2><span class="tempo">Scroll — the hall passes</span></div>
+      <div class="mvt-head reveal" data-num="III"><span class="mvt-num">III.</span><h2>The Room</h2><span class="tempo">Scroll — the hall passes</span></div>
     </div>
     <div class="track" id="track">
       <figure class="frame tall">
@@ -548,7 +568,7 @@
 
   <section class="movement" id="screen">
     <div class="inner">
-      <div class="mvt-head reveal"><span class="mvt-num">IV.</span><h2>On Screen</h2><span class="tempo">Maestoso — for Cromwell</span></div>
+      <div class="mvt-head reveal" data-num="IV"><span class="mvt-num">IV.</span><h2>On Screen</h2><span class="tempo">Maestoso — for Cromwell</span></div>
 
       <!-- The snuffing — Wolf Hall's own image. One candle between the head
            and the cards; scrolling gutters it, then puts it out, and a curl
@@ -625,7 +645,8 @@
     <figure class="plate vignette" data-par="0.26" aria-hidden="true">
       <img data-slot="coda" loading="lazy" decoding="async" sizes="100vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/960px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 1280w" alt="">
     </figure>
-    <h2 class="reveal">Music, as it sounds <em>by candlelight.</em></h2>
+    <h2 class="reveal">Music, as it sounds <em class="flourished">by candlelight.
+      <svg class="flourish" viewBox="0 0 300 22" aria-hidden="true" preserveAspectRatio="none"><path d="M4 14 C 60 4 120 20 165 12 C 220 3 262 12 296 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></em></h2>
     <p class="reveal">The candlelight series continues at St Martin-in-the-Fields, with theatre concerts and festival appearances across Britain. Join us in the glow.</p>
     <!-- Populated from the CONCERTS array at the top of the script below.
          Empty array -> stays hidden and the diary link carries the section. -->
@@ -1368,6 +1389,7 @@
     }
 
 
+      gsap.to('.flourish path',{strokeDashoffset:0,duration:1.6,ease:'power2.inOut',scrollTrigger:{trigger:'.coda',start:'top 65%'}});
       gsap.to('#stage',{opacity:.3,ease:'none',scrollTrigger:{trigger:'#ensemble',start:'top 90%',end:'top 30%',scrub:true}});
       gsap.to('#stage',{opacity:1,ease:'none',scrollTrigger:{trigger:'.coda',start:'top 75%',end:'top 25%',scrub:true}});
     }
