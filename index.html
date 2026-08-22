@@ -6,6 +6,27 @@
 <meta name="theme-color" content="#07060B">
 <title>The Locrian Ensemble of London — Candlelight &amp; Strings</title>
 <meta name="description" content="London's leading string soloists. Candlelight concerts at St Martin-in-the-Fields, and the ensemble behind the Wolf Hall scores.">
+
+<!-- SITE URL — every absolute URL below points at the live domain. Change all
+     of them together when the domain is settled (see README, TODO 3). -->
+<link rel="canonical" href="https://locrianensemble.london/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Locrian Ensemble of London">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="https://locrianensemble.london/">
+<meta property="og:title" content="The Locrian Ensemble of London — Candlelight &amp; Strings">
+<meta property="og:description" content="London's leading string soloists. Candlelight concerts at St Martin-in-the-Fields, and the ensemble behind the Wolf Hall scores.">
+<meta property="og:image" content="https://locrianensemble.london/assets/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Locrian Ensemble of London — candlelight and strings">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Locrian Ensemble of London — Candlelight &amp; Strings">
+<meta name="twitter:description" content="London's leading string soloists. Candlelight concerts at St Martin-in-the-Fields, and the ensemble behind the Wolf Hall scores.">
+<meta name="twitter:image" content="https://locrianensemble.london/assets/og.jpg">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
@@ -195,6 +216,23 @@
   footer a{text-decoration:none;padding:6px 0}
   footer a:hover{color:var(--ivory)}
   .credit{width:100%;font-size:10px;letter-spacing:.06em;text-transform:none;color:rgba(142,135,160,.55);line-height:1.6;margin-top:6px}
+  .credit summary{cursor:pointer;letter-spacing:.14em;text-transform:uppercase;font-size:10px;color:var(--smoke)}
+  .credit summary:focus-visible{outline:1px solid var(--flame);outline-offset:3px}
+  .credit p{margin:10px 0 8px;max-width:70ch}
+  .credit ul{list-style:none;display:grid;gap:5px}
+  .credit a{color:rgba(224,164,88,.7)}
+  .credit .lic{opacity:.7}
+
+  .diary{list-style:none;max-width:34rem;margin:0 auto clamp(26px,4vh,44px);text-align:left;border-top:1px solid var(--hairline)}
+  .diary li{border-bottom:1px solid var(--hairline)}
+  .diary a,.diary .row{display:grid;gap:2px 18px;padding:14px 2px;min-height:56px;align-content:center;text-decoration:none;color:inherit}
+  @media(min-width:521px){.diary a,.diary .row{grid-template-columns:minmax(130px,auto) 1fr;align-items:baseline}}
+  .diary .when{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--flame)}
+  .diary .what{font-family:'Cormorant Garamond',serif;font-size:clamp(19px,4.6vw,25px);font-weight:500;line-height:1.2;transition:color .3s}
+  .diary .where{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--smoke);grid-column:1/-1}
+  @media(min-width:521px){.diary .where{grid-column:2}}
+  .diary a:focus-visible{outline:1px solid var(--flame);outline-offset:-2px}
+  @media(hover:hover){.diary a:hover .what{color:var(--flame-bright)}}
 
   .reveal{opacity:0;transform:translateY(28px)}
   @media (prefers-reduced-motion: reduce){
@@ -233,7 +271,7 @@
 
 <section class="hero" id="top">
   <figure class="plate hero-plate vignette" data-par="0.22" aria-hidden="true">
-    <img fetchpriority="high" decoding="async" sizes="100vw"
+    <img data-slot="hero" fetchpriority="high" decoding="async" sizes="100vw"
       src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Interior_of_St_Martin-in-the-Fields%2C_2011.jpg/1280px-Interior_of_St_Martin-in-the-Fields%2C_2011.jpg"
       srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Interior_of_St_Martin-in-the-Fields%2C_2011.jpg/960px-Interior_of_St_Martin-in-the-Fields%2C_2011.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Interior_of_St_Martin-in-the-Fields%2C_2011.jpg/1280px-Interior_of_St_Martin-in-the-Fields%2C_2011.jpg 1280w, https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Interior_of_St_Martin-in-the-Fields%2C_2011.jpg/1920px-Interior_of_St_Martin-in-the-Fields%2C_2011.jpg 1920w" alt="">
   </figure>
@@ -269,13 +307,13 @@
         </div>
         <div class="stack">
           <figure class="plate reveal" data-par="0.14">
-            <img loading="lazy" decoding="async" sizes="(max-width:900px) 46vw, 42vw"
+            <img data-slot="movement-i-a" loading="lazy" decoding="async" sizes="(max-width:900px) 46vw, 42vw"
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Old_Cello_Abstract_%2828452403987%29.jpg/1280px-Old_Cello_Abstract_%2828452403987%29.jpg"
               srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Old_Cello_Abstract_%2828452403987%29.jpg/960px-Old_Cello_Abstract_%2828452403987%29.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Old_Cello_Abstract_%2828452403987%29.jpg/1280px-Old_Cello_Abstract_%2828452403987%29.jpg 1280w" alt="Close detail of a cello's strings crossing the bridge">
             <figcaption>The founder's instrument</figcaption>
           </figure>
           <figure class="plate wide reveal" data-par="0.1">
-            <img loading="lazy" decoding="async" sizes="(max-width:900px) 46vw, 42vw"
+            <img data-slot="movement-i-b" loading="lazy" decoding="async" sizes="(max-width:900px) 46vw, 42vw"
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Old_Cello_Abstract_%2843451834325%29.jpg/1280px-Old_Cello_Abstract_%2843451834325%29.jpg"
               srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Old_Cello_Abstract_%2843451834325%29.jpg/960px-Old_Cello_Abstract_%2843451834325%29.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Old_Cello_Abstract_%2843451834325%29.jpg/1280px-Old_Cello_Abstract_%2843451834325%29.jpg 1280w" alt="Close detail of a cello's f-hole and aged spruce">
             <figcaption>Aged spruce</figcaption>
@@ -287,7 +325,7 @@
 
   <section class="bleed" id="candlelight">
     <figure class="plate vignette" data-par="0.3" aria-hidden="true">
-      <img loading="lazy" decoding="async" sizes="100vw"
+      <img data-slot="movement-ii" loading="lazy" decoding="async" sizes="100vw"
         src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/1280px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png"
         srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/960px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/1280px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png 1280w" alt="">
     </figure>
@@ -311,23 +349,23 @@
     </div>
     <div class="track" id="track">
       <figure class="frame tall">
-        <div class="plate"><img loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/St_Martin-in-the-Fields_Interior_1.jpg/1280px-St_Martin-in-the-Fields_Interior_1.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/St_Martin-in-the-Fields_Interior_1.jpg/960px-St_Martin-in-the-Fields_Interior_1.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/St_Martin-in-the-Fields_Interior_1.jpg/1280px-St_Martin-in-the-Fields_Interior_1.jpg 1280w" alt="The nave of St Martin-in-the-Fields looking east"></div>
+        <div class="plate"><img data-slot="gallery-1" loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/St_Martin-in-the-Fields_Interior_1.jpg/1280px-St_Martin-in-the-Fields_Interior_1.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/St_Martin-in-the-Fields_Interior_1.jpg/960px-St_Martin-in-the-Fields_Interior_1.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/St_Martin-in-the-Fields_Interior_1.jpg/1280px-St_Martin-in-the-Fields_Interior_1.jpg 1280w" alt="The nave of St Martin-in-the-Fields looking east"></div>
         <div class="cap"><b>Down the nave</b>Where the series has run for years</div>
       </figure>
       <figure class="frame land">
-        <div class="plate"><img loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/St_Martin_in_the_Fields_interior_2026-01-17.jpg/1280px-St_Martin_in_the_Fields_interior_2026-01-17.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/St_Martin_in_the_Fields_interior_2026-01-17.jpg/960px-St_Martin_in_the_Fields_interior_2026-01-17.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/St_Martin_in_the_Fields_interior_2026-01-17.jpg/1280px-St_Martin_in_the_Fields_interior_2026-01-17.jpg 1280w" alt="Gibbs ceiling and chandeliers at St Martin-in-the-Fields"></div>
+        <div class="plate"><img data-slot="gallery-2" loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/St_Martin_in_the_Fields_interior_2026-01-17.jpg/1280px-St_Martin_in_the_Fields_interior_2026-01-17.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/St_Martin_in_the_Fields_interior_2026-01-17.jpg/960px-St_Martin_in_the_Fields_interior_2026-01-17.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/St_Martin_in_the_Fields_interior_2026-01-17.jpg/1280px-St_Martin_in_the_Fields_interior_2026-01-17.jpg 1280w" alt="Gibbs ceiling and chandeliers at St Martin-in-the-Fields"></div>
         <div class="cap"><b>The Gibbs ceiling</b>Plasterwork that carries the sound</div>
       </figure>
       <figure class="frame">
-        <div class="plate"><img loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/St_Martin-in-the-Fields_Interior_3.jpg/1280px-St_Martin-in-the-Fields_Interior_3.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/St_Martin-in-the-Fields_Interior_3.jpg/960px-St_Martin-in-the-Fields_Interior_3.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/St_Martin-in-the-Fields_Interior_3.jpg/1280px-St_Martin-in-the-Fields_Interior_3.jpg 1280w" alt="Galleries and columns inside St Martin-in-the-Fields"></div>
+        <div class="plate"><img data-slot="gallery-3" loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/St_Martin-in-the-Fields_Interior_3.jpg/1280px-St_Martin-in-the-Fields_Interior_3.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/St_Martin-in-the-Fields_Interior_3.jpg/960px-St_Martin-in-the-Fields_Interior_3.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/St_Martin-in-the-Fields_Interior_3.jpg/1280px-St_Martin-in-the-Fields_Interior_3.jpg 1280w" alt="Galleries and columns inside St Martin-in-the-Fields"></div>
         <div class="cap"><b>The galleries</b>Three hundred seats, close in</div>
       </figure>
       <figure class="frame land">
-        <div class="plate"><img loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Old_Cello_Abstract_%2843451834325%29.jpg/1280px-Old_Cello_Abstract_%2843451834325%29.jpg" alt="The f-hole and aged spruce of a cello"></div>
+        <div class="plate"><img data-slot="gallery-4" loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Old_Cello_Abstract_%2843451834325%29.jpg/1280px-Old_Cello_Abstract_%2843451834325%29.jpg" alt="The f-hole and aged spruce of a cello"></div>
         <div class="cap"><b>Four strings</b>Where every programme begins</div>
       </figure>
       <figure class="frame tall">
-        <div class="plate"><img loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg" alt="St Martin-in-the-Fields lit at night on Trafalgar Square"></div>
+        <div class="plate"><img data-slot="gallery-5" loading="lazy" decoding="async" sizes="(max-width:760px) 78vw, 34vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg" alt="St Martin-in-the-Fields lit at night on Trafalgar Square"></div>
         <div class="cap"><b>Seven o'clock</b>Trafalgar Square, doors open</div>
       </figure>
     </div>
@@ -339,7 +377,7 @@
       <div class="mvt-head reveal"><span class="mvt-num">IV.</span><h2>On Screen</h2><span class="tempo">Maestoso — for Cromwell</span></div>
       <div class="screen-grid">
         <article class="card reveal">
-          <figure class="plate"><img loading="lazy" decoding="async" sizes="(max-width:760px) 100vw, 46vw" src="https://upload.wikimedia.org/wikipedia/commons/9/92/The_Great_Hall%2C_Hampton_Court_Palace%2C_Surrey_-_geograph.org.uk_-_2510515.jpg" alt="Tudor stained glass in the Great Hall at Hampton Court Palace"></figure>
+          <figure class="plate"><img data-slot="screen-1" loading="lazy" decoding="async" sizes="(max-width:760px) 100vw, 46vw" src="https://upload.wikimedia.org/wikipedia/commons/9/92/The_Great_Hall%2C_Hampton_Court_Palace%2C_Surrey_-_geograph.org.uk_-_2510515.jpg" alt="Tudor stained glass in the Great Hall at Hampton Court Palace"></figure>
           <div class="body">
             <span class="year">2015 · BBC</span>
             <h3>Wolf Hall</h3>
@@ -348,7 +386,7 @@
           </div>
         </article>
         <article class="card reveal">
-          <figure class="plate"><img loading="lazy" decoding="async" sizes="(max-width:760px) 100vw, 46vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/1280px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png" alt="A candlelit church interior in shadow"></figure>
+          <figure class="plate"><img data-slot="screen-2" loading="lazy" decoding="async" sizes="(max-width:760px) 100vw, 46vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/1280px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png" alt="A candlelit church interior in shadow"></figure>
           <div class="body">
             <span class="year">2024 · BBC</span>
             <h3>The Mirror &amp; The Light</h3>
@@ -366,10 +404,13 @@
 
   <section class="coda" id="concerts">
     <figure class="plate vignette" data-par="0.26" aria-hidden="true">
-      <img loading="lazy" decoding="async" sizes="100vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/960px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 1280w" alt="">
+      <img data-slot="coda" loading="lazy" decoding="async" sizes="100vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/960px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 1280w" alt="">
     </figure>
     <h2 class="reveal">Music, as it sounds <em>by candlelight.</em></h2>
     <p class="reveal">The candlelight series continues at St Martin-in-the-Fields, with theatre concerts and festival appearances across Britain. Join us in the glow.</p>
+    <!-- Populated from the CONCERTS array at the top of the script below.
+         Empty array -> stays hidden and the diary link carries the section. -->
+    <ul class="diary reveal" id="diary" hidden></ul>
     <div class="listen-row reveal">
       <a class="btn gold" href="https://www.stmartin-in-the-fields.org/candlelight-concerts/" target="_blank" rel="noopener">View the concert diary</a>
       <a class="btn ghost" href="mailto:bookings@locrianensemble.london">Book the ensemble</a>
@@ -382,7 +423,28 @@
   <span>The Locrian Ensemble of London</span>
   <span>Founded by Justin Pearson</span>
   <a href="#top">Back to the top ↑</a>
-  <span class="credit">Placeholder photography from Wikimedia Commons pending the ensemble's own images — St Martin-in-the-Fields interiors and night exterior, and the cello details, are CC BY / CC BY-SA and require attribution if kept. The candlelit church interior is public domain.</span>
+  <!-- PHOTO CREDITS — generated from the image sources.
+       `node tools/fetch-placeholders.mjs` rewrites this block with the real
+       author and licence for each file, pulled from the Commons API.
+       Delete the whole <details> once the ensemble's own photography is in. -->
+  <details class="credit">
+    <summary>Placeholder photography — Wikimedia Commons</summary>
+    <p>Every photograph on this page is a stand-in pending the ensemble's own
+      images. They are variously CC BY, CC BY-SA and public domain; the
+      attribution each one requires is on its file page below.</p>
+    <ul>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Interior_of_St_Martin-in-the-Fields%2C_2011.jpg" target="_blank" rel="noopener">Interior of St Martin-in-the-Fields, 2011</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Old_Cello_Abstract_%2828452403987%29.jpg" target="_blank" rel="noopener">Old Cello Abstract (28452403987)</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Old_Cello_Abstract_%2843451834325%29.jpg" target="_blank" rel="noopener">Old Cello Abstract (43451834325)</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png" target="_blank" rel="noopener">Interior of a Gothic Church by Candlelight (SM 503)</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:St_Martin-in-the-Fields_Interior_1.jpg" target="_blank" rel="noopener">St Martin-in-the-Fields Interior 1</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:St_Martin_in_the_Fields_interior_2026-01-17.jpg" target="_blank" rel="noopener">St Martin in the Fields interior 2026-01-17</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:St_Martin-in-the-Fields_Interior_3.jpg" target="_blank" rel="noopener">St Martin-in-the-Fields Interior 3</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg" target="_blank" rel="noopener">St Martin-in-the-Fields at night, Trafalgar Square, London - geograph.org.uk - 1867030</a> <span class="lic">licence &amp; author on the file page</span></li>
+      <li><a href="https://commons.wikimedia.org/wiki/File:The_Great_Hall%2C_Hampton_Court_Palace%2C_Surrey_-_geograph.org.uk_-_2510515.jpg" target="_blank" rel="noopener">The Great Hall, Hampton Court Palace, Surrey - geograph.org.uk - 2510515</a> <span class="lic">licence &amp; author on the file page</span></li>
+    </ul>
+  </details>
+  <!-- /PHOTO CREDITS -->
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -391,6 +453,44 @@
 <script>
 (function(){
   "use strict";
+
+  /* ================= EDIT ME: upcoming concerts =================
+     The only place dates live. Add an object per concert and the list
+     renders itself in the coda; leave the array empty and the section
+     falls back to the St Martin's diary link alone. Dates in the past
+     drop off on their own, so old entries are safe to leave.
+
+       { date : '2026-09-14',                    // ISO, required
+         time : '19:30',                         // optional
+         title: 'Vivaldi by Candlelight',        // required
+         venue: 'St Martin-in-the-Fields',       // optional
+         url  : 'https://…' }                    // optional booking link
+  ================================================================ */
+  const CONCERTS = [];
+
+  (function renderDiary(){
+    const list = document.getElementById('diary');
+    if(!list) return;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const fmt = new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    const upcoming = CONCERTS
+      .filter(c => c && c.date && c.title && new Date(c.date) >= today)
+      .sort((a,b) => a.date.localeCompare(b.date));
+    if(!upcoming.length) return;
+
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    list.innerHTML = upcoming.map(c => {
+      const when  = fmt.format(new Date(c.date)) + (c.time ? ' · ' + esc(c.time) : '');
+      const inner = '<span class="when">' + when + '</span>' +
+                    '<span class="what">' + esc(c.title) + '</span>' +
+                    (c.venue ? '<span class="where">' + esc(c.venue) + '</span>' : '');
+      return '<li>' + (c.url
+        ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + inner + '</a>'
+        : '<span class="row">' + inner + '</span>') + '</li>';
+    }).join('');
+    list.hidden = false;
+  })();
+
   const reduced  = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const isPhone  = () => innerWidth < 761;
@@ -457,129 +557,135 @@
   }
 
   /* ================= three.js string field ================= */
-  const canvas=document.getElementById('strings');
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:!isPhone(),alpha:true,powerPreference:'low-power'});
-  const scene=new THREE.Scene();
-  let W=innerWidth,H=innerHeight;
-  const camera=new THREE.OrthographicCamera(-W/2,W/2,H/2,-H/2,1,1000);
-  camera.position.z=100;
-  const GOLD=new THREE.Color(0xE0A458), BRIGHT=new THREE.Color(0xFFE3AE);
-  let SEGS=48, strings=[], embers=null;
+  /* A blocked CDN must not take the page down with it — no THREE, no string
+     field, and the invitation to play it goes too. */
+  if(window.THREE){
+    const canvas=document.getElementById('strings');
+    const renderer=new THREE.WebGLRenderer({canvas,antialias:!isPhone(),alpha:true,powerPreference:'low-power'});
+    const scene=new THREE.Scene();
+    let W=innerWidth,H=innerHeight;
+    const camera=new THREE.OrthographicCamera(-W/2,W/2,H/2,-H/2,1,1000);
+    camera.position.z=100;
+    const GOLD=new THREE.Color(0xE0A458), BRIGHT=new THREE.Color(0xFFE3AE);
+    let SEGS=48, strings=[], embers=null;
 
-  function buildStrings(){
-    strings.forEach(s=>s.lines.forEach(l=>{scene.remove(l);l.geometry.dispose();l.material.dispose();}));
-    strings=[];
-    const phone=isPhone();
-    SEGS=phone?30:48;
-    /* fewer, wider-spaced strings on a phone — a fingertip is not a cursor */
-    const count=phone?7:Math.max(9,Math.min(15,Math.round(W/110)));
-    const span=W*(phone?.88:.78);
-    for(let i=0;i<count;i++){
-      const x=-span/2+span*(i/(count-1)); const lines=[];
-      for(let k=0;k<(phone?1:2);k++){
-        const geo=new THREE.BufferGeometry();
-        const pos=new Float32Array(SEGS*3);
-        for(let j=0;j<SEGS;j++){
-          pos[j*3]=x+(k?1.4:0);
-          pos[j*3+1]=-H/2+H*(j/(SEGS-1));
-          pos[j*3+2]=0;
+    function buildStrings(){
+      strings.forEach(s=>s.lines.forEach(l=>{scene.remove(l);l.geometry.dispose();l.material.dispose();}));
+      strings=[];
+      const phone=isPhone();
+      SEGS=phone?30:48;
+      /* fewer, wider-spaced strings on a phone — a fingertip is not a cursor */
+      const count=phone?7:Math.max(9,Math.min(15,Math.round(W/110)));
+      const span=W*(phone?.88:.78);
+      for(let i=0;i<count;i++){
+        const x=-span/2+span*(i/(count-1)); const lines=[];
+        for(let k=0;k<(phone?1:2);k++){
+          const geo=new THREE.BufferGeometry();
+          const pos=new Float32Array(SEGS*3);
+          for(let j=0;j<SEGS;j++){
+            pos[j*3]=x+(k?1.4:0);
+            pos[j*3+1]=-H/2+H*(j/(SEGS-1));
+            pos[j*3+2]=0;
+          }
+          geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+          const mat=new THREE.LineBasicMaterial({color:GOLD.clone(),transparent:true,opacity:k?.2:.8,blending:THREE.AdditiveBlending});
+          const line=new THREE.Line(geo,mat); scene.add(line); lines.push(line);
         }
-        geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-        const mat=new THREE.LineBasicMaterial({color:GOLD.clone(),transparent:true,opacity:k?.2:.8,blending:THREE.AdditiveBlending});
-        const line=new THREE.Line(geo,mat); scene.add(line); lines.push(line);
+        strings.push({x,lines,amp:0,phase:Math.random()*6.28,speed:.24+i*.012,idle:Math.random()*6.28});
       }
-      strings.push({x,lines,amp:0,phase:Math.random()*6.28,speed:.24+i*.012,idle:Math.random()*6.28});
     }
-  }
-  function buildEmbers(){
-    if(embers){scene.remove(embers);embers.geometry.dispose();embers.material.dispose();}
-    const n=isPhone()?55:150, geo=new THREE.BufferGeometry();
-    const pos=new Float32Array(n*3), spd=new Float32Array(n);
-    for(let i=0;i<n;i++){
-      pos[i*3]=(Math.random()-.5)*W;
-      pos[i*3+1]=(Math.random()-.5)*H;
-      pos[i*3+2]=-10;
-      spd[i]=.08+Math.random()*.25;
+    function buildEmbers(){
+      if(embers){scene.remove(embers);embers.geometry.dispose();embers.material.dispose();}
+      const n=isPhone()?55:150, geo=new THREE.BufferGeometry();
+      const pos=new Float32Array(n*3), spd=new Float32Array(n);
+      for(let i=0;i<n;i++){
+        pos[i*3]=(Math.random()-.5)*W;
+        pos[i*3+1]=(Math.random()-.5)*H;
+        pos[i*3+2]=-10;
+        spd[i]=.08+Math.random()*.25;
+      }
+      geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+      geo.userData.spd=spd;
+      const mat=new THREE.PointsMaterial({color:0xE0A458,size:2.2,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,depthWrite:false});
+      embers=new THREE.Points(geo,mat); scene.add(embers);
     }
-    geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-    geo.userData.spd=spd;
-    const mat=new THREE.PointsMaterial({color:0xE0A458,size:2.2,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,depthWrite:false});
-    embers=new THREE.Points(geo,mat); scene.add(embers);
-  }
 
-  let prevX=null;
-  function onMove(cx,cy){
-    const wx=cx-W/2;
-    if(prevX!==null&&scrollY<H*.9){
-      const speed=Math.abs(wx-prevX);
-      strings.forEach((s,i)=>{
-        if((prevX-s.x)*(wx-s.x)<0){ s.amp=Math.min(34,10+speed*.35); s.phase=0; pluck(i,speed/60); }
+    let prevX=null;
+    function onMove(cx,cy){
+      const wx=cx-W/2;
+      if(prevX!==null&&scrollY<H*.9){
+        const speed=Math.abs(wx-prevX);
+        strings.forEach((s,i)=>{
+          if((prevX-s.x)*(wx-s.x)<0){ s.amp=Math.min(34,10+speed*.35); s.phase=0; pluck(i,speed/60); }
+        });
+      }
+      prevX=wx;
+      if(canHover&&!reduced){ gsap.to(camera.position,{y:-((cy/H)-.5)*14,duration:1.2,ease:'power2.out',overwrite:'auto'}); }
+    }
+    /* pointermove covers mouse, pen AND touch — a second touchmove listener
+       would double every pluck, so there isn't one. */
+    addEventListener('pointermove',e=>onMove(e.clientX,e.clientY),{passive:true});
+    addEventListener('pointerup',()=>{prevX=null;},{passive:true});
+
+    const tmp=new THREE.Color(); let t=0;
+    function frame(){
+      requestAnimationFrame(frame); t+=.016;
+      strings.forEach(s=>{
+        s.phase+=s.speed; s.amp*=.965;
+        const idle=reduced?0:Math.sin(t*.7+s.idle)*.6, a=s.amp;
+        s.lines.forEach((line,k)=>{
+          const pos=line.geometry.attributes.position.array;
+          for(let j=0;j<SEGS;j++){
+            const u=j/(SEGS-1), shape=Math.sin(Math.PI*u);
+            const wave=Math.sin(s.phase)*shape+.35*Math.sin(s.phase*2.02)*Math.sin(2*Math.PI*u);
+            pos[j*3]=s.x+(k?1.4:0)+wave*a+idle*shape;
+          }
+          line.geometry.attributes.position.needsUpdate=true;
+          const heat=Math.min(1,a/22);
+          tmp.copy(GOLD).lerp(BRIGHT,heat);
+          line.material.color.copy(tmp);
+          line.material.opacity=(k?.2:.8)+heat*.15;
+        });
       });
-    }
-    prevX=wx;
-    if(canHover&&!reduced){ gsap.to(camera.position,{y:-((cy/H)-.5)*14,duration:1.2,ease:'power2.out',overwrite:'auto'}); }
-  }
-  /* pointermove covers mouse, pen AND touch — a second touchmove listener
-     would double every pluck, so there isn't one. */
-  addEventListener('pointermove',e=>onMove(e.clientX,e.clientY),{passive:true});
-  addEventListener('pointerup',()=>{prevX=null;},{passive:true});
-
-  const tmp=new THREE.Color(); let t=0;
-  function frame(){
-    requestAnimationFrame(frame); t+=.016;
-    strings.forEach(s=>{
-      s.phase+=s.speed; s.amp*=.965;
-      const idle=reduced?0:Math.sin(t*.7+s.idle)*.6, a=s.amp;
-      s.lines.forEach((line,k)=>{
-        const pos=line.geometry.attributes.position.array;
-        for(let j=0;j<SEGS;j++){
-          const u=j/(SEGS-1), shape=Math.sin(Math.PI*u);
-          const wave=Math.sin(s.phase)*shape+.35*Math.sin(s.phase*2.02)*Math.sin(2*Math.PI*u);
-          pos[j*3]=s.x+(k?1.4:0)+wave*a+idle*shape;
+      if(embers&&!reduced){
+        const pos=embers.geometry.attributes.position.array, spd=embers.geometry.userData.spd;
+        for(let i=0;i<spd.length;i++){
+          pos[i*3+1]+=spd[i];
+          pos[i*3]+=Math.sin(t*.5+i)*.05;
+          if(pos[i*3+1]>H/2+10) pos[i*3+1]=-H/2-10;
         }
-        line.geometry.attributes.position.needsUpdate=true;
-        const heat=Math.min(1,a/22);
-        tmp.copy(GOLD).lerp(BRIGHT,heat);
-        line.material.color.copy(tmp);
-        line.material.opacity=(k?.2:.8)+heat*.15;
-      });
+        embers.geometry.attributes.position.needsUpdate=true;
+      }
+      renderer.render(scene,camera);
+    }
+    function sizeRenderer(){
+      renderer.setPixelRatio(Math.min(devicePixelRatio||1,isPhone()?1.5:2));
+      renderer.setSize(W,H,false);
+      camera.left=-W/2; camera.right=W/2; camera.top=H/2; camera.bottom=-H/2;
+      camera.updateProjectionMatrix();
+    }
+    function fullRebuild(){ sizeRenderer(); buildStrings(); buildEmbers(); }
+    fullRebuild(); frame();
+
+    /* On mobile, scrolling shows/hides the URL bar and fires resize constantly.
+       Rebuilding geometry and refreshing ScrollTrigger on every one of those
+       is what makes a page like this stutter — so only react to a real
+       width change or an orientation change. */
+    let lastW=innerWidth, rzTimer;
+    addEventListener('resize',()=>{
+      const wChanged=Math.abs(innerWidth-lastW)>40;
+      W=innerWidth; H=innerHeight;
+      if(!wChanged){ sizeRenderer(); return; }   /* height-only: just resize the buffer */
+      lastW=innerWidth;
+      clearTimeout(rzTimer);
+      rzTimer=setTimeout(()=>{ fullRebuild(); window.ScrollTrigger && ScrollTrigger.refresh(); },180);
+    },{passive:true});
+    addEventListener('orientationchange',()=>{
+      setTimeout(()=>{ W=innerWidth; H=innerHeight; lastW=W; fullRebuild(); window.ScrollTrigger && ScrollTrigger.refresh(); },260);
     });
-    if(embers&&!reduced){
-      const pos=embers.geometry.attributes.position.array, spd=embers.geometry.userData.spd;
-      for(let i=0;i<spd.length;i++){
-        pos[i*3+1]+=spd[i];
-        pos[i*3]+=Math.sin(t*.5+i)*.05;
-        if(pos[i*3+1]>H/2+10) pos[i*3+1]=-H/2-10;
-      }
-      embers.geometry.attributes.position.needsUpdate=true;
-    }
-    renderer.render(scene,camera);
+  } else {
+    document.querySelector('.hint').hidden = true;
   }
-  function sizeRenderer(){
-    renderer.setPixelRatio(Math.min(devicePixelRatio||1,isPhone()?1.5:2));
-    renderer.setSize(W,H,false);
-    camera.left=-W/2; camera.right=W/2; camera.top=H/2; camera.bottom=-H/2;
-    camera.updateProjectionMatrix();
-  }
-  function fullRebuild(){ sizeRenderer(); buildStrings(); buildEmbers(); }
-  fullRebuild(); frame();
-
-  /* On mobile, scrolling shows/hides the URL bar and fires resize constantly.
-     Rebuilding geometry and refreshing ScrollTrigger on every one of those
-     is what makes a page like this stutter — so only react to a real
-     width change or an orientation change. */
-  let lastW=innerWidth, rzTimer;
-  addEventListener('resize',()=>{
-    const wChanged=Math.abs(innerWidth-lastW)>40;
-    W=innerWidth; H=innerHeight;
-    if(!wChanged){ sizeRenderer(); return; }   /* height-only: just resize the buffer */
-    lastW=innerWidth;
-    clearTimeout(rzTimer);
-    rzTimer=setTimeout(()=>{ fullRebuild(); ScrollTrigger.refresh(); },180);
-  },{passive:true});
-  addEventListener('orientationchange',()=>{
-    setTimeout(()=>{ W=innerWidth; H=innerHeight; lastW=W; fullRebuild(); ScrollTrigger.refresh(); },260);
-  });
 
   /* repertoire plucks — hover on desktop, tap on touch */
   document.querySelectorAll('#repList button').forEach(b=>{
@@ -590,43 +696,50 @@
   });
 
   /* ================= GSAP ================= */
-  gsap.registerPlugin(ScrollTrigger);
-  const bar=document.getElementById('topbar');
-  ScrollTrigger.create({start:80,onUpdate:s=>bar.classList.toggle('scrolled',s.scroll()>80),onEnter:()=>bar.classList.add('scrolled'),onLeaveBack:()=>bar.classList.remove('scrolled')});
-
-  if(reduced){
-    gsap.set('.reveal',{opacity:1,y:0});
+  /* Without GSAP there is no scroll animation — and .reveal starts at
+     opacity:0, so every word past the hero would stay invisible. Show them
+     all instead: no motion, but a page you can read. */
+  if(!window.gsap || !window.ScrollTrigger){
+    document.querySelectorAll('.reveal').forEach(el=>{ el.style.opacity='1'; el.style.transform='none'; });
   } else {
-    gsap.from('h1 .word > span',{yPercent:110,duration:1.3,ease:'power4.out',stagger:.12,delay:.25});
-    gsap.from('.eyebrow, .hero .of, .hero .lede, .hint',{opacity:0,y:16,duration:1,ease:'power2.out',stagger:.1,delay:.9});
-    gsap.from('.hero-plate img',{scale:1.24,duration:2.6,ease:'power2.out'});
-    gsap.utils.toArray('.reveal').forEach(el=>{
-      gsap.to(el,{opacity:1,y:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
-    });
+    gsap.registerPlugin(ScrollTrigger);
+    const bar=document.getElementById('topbar');
+    ScrollTrigger.create({start:80,onUpdate:s=>bar.classList.toggle('scrolled',s.scroll()>80),onEnter:()=>bar.classList.add('scrolled'),onLeaveBack:()=>bar.classList.remove('scrolled')});
 
-    const mm=gsap.matchMedia();
-
-    /* Parallax is a scrubbed transform per image. Nine of them on a phone
-       is where the frame budget goes, so desktop only. */
-    mm.add('(min-width: 761px)',()=>{
-      const tweens=gsap.utils.toArray('.plate').map(p=>{
-        const depth=parseFloat(p.dataset.par||'.12');
-        return gsap.fromTo(p.querySelector('img'),{yPercent:-depth*50},{yPercent:depth*50,ease:'none',scrollTrigger:{trigger:p,start:'top bottom',end:'bottom top',scrub:true}});
+    if(reduced){
+      gsap.set('.reveal',{opacity:1,y:0});
+    } else {
+      gsap.from('h1 .word > span',{yPercent:110,duration:1.3,ease:'power4.out',stagger:.12,delay:.25});
+      gsap.from('.eyebrow, .hero .of, .hero .lede, .hint',{opacity:0,y:16,duration:1,ease:'power2.out',stagger:.1,delay:.9});
+      gsap.from('.hero-plate img',{scale:1.24,duration:2.6,ease:'power2.out'});
+      gsap.utils.toArray('.reveal').forEach(el=>{
+        gsap.to(el,{opacity:1,y:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
       });
-      return ()=>tweens.forEach(t=>t.scrollTrigger&&t.scrollTrigger.kill());
-    });
 
-    /* Pinned sideways gallery on desktop; the phone gets a native
-       snap-scroll carousel instead, which never fights the page scroll. */
-    mm.add('(min-width: 761px)',()=>{
-      const track=document.getElementById('track');
-      const dist=()=>track.scrollWidth-innerWidth;
-      const tw=gsap.to(track,{x:()=>-dist(),ease:'none',scrollTrigger:{trigger:'.gallery-wrap',start:'top top',end:()=>'+='+dist(),pin:true,scrub:.8,invalidateOnRefresh:true,anticipatePin:1}});
-      return ()=>{ tw.scrollTrigger&&tw.scrollTrigger.kill(); gsap.set(track,{x:0}); };
-    });
+      const mm=gsap.matchMedia();
 
-    gsap.to('#stage',{opacity:.3,ease:'none',scrollTrigger:{trigger:'#ensemble',start:'top 90%',end:'top 30%',scrub:true}});
-    gsap.to('#stage',{opacity:1,ease:'none',scrollTrigger:{trigger:'.coda',start:'top 75%',end:'top 25%',scrub:true}});
+      /* Parallax is a scrubbed transform per image. Nine of them on a phone
+         is where the frame budget goes, so desktop only. */
+      mm.add('(min-width: 761px)',()=>{
+        const tweens=gsap.utils.toArray('.plate').map(p=>{
+          const depth=parseFloat(p.dataset.par||'.12');
+          return gsap.fromTo(p.querySelector('img'),{yPercent:-depth*50},{yPercent:depth*50,ease:'none',scrollTrigger:{trigger:p,start:'top bottom',end:'bottom top',scrub:true}});
+        });
+        return ()=>tweens.forEach(t=>t.scrollTrigger&&t.scrollTrigger.kill());
+      });
+
+      /* Pinned sideways gallery on desktop; the phone gets a native
+         snap-scroll carousel instead, which never fights the page scroll. */
+      mm.add('(min-width: 761px)',()=>{
+        const track=document.getElementById('track');
+        const dist=()=>track.scrollWidth-innerWidth;
+        const tw=gsap.to(track,{x:()=>-dist(),ease:'none',scrollTrigger:{trigger:'.gallery-wrap',start:'top top',end:()=>'+='+dist(),pin:true,scrub:.8,invalidateOnRefresh:true,anticipatePin:1}});
+        return ()=>{ tw.scrollTrigger&&tw.scrollTrigger.kill(); gsap.set(track,{x:0}); };
+      });
+
+      gsap.to('#stage',{opacity:.3,ease:'none',scrollTrigger:{trigger:'#ensemble',start:'top 90%',end:'top 30%',scrub:true}});
+      gsap.to('#stage',{opacity:1,ease:'none',scrollTrigger:{trigger:'.coda',start:'top 75%',end:'top 25%',scrub:true}});
+    }
   }
 })();
 </script>

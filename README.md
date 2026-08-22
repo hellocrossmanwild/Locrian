@@ -33,6 +33,11 @@ tempo marking rather than a generic section label.
 
 No framework, no bundler, no dependencies to install.
 
+Both CDN bundles are treated as optional. If either fails to arrive — a
+corporate proxy, a blocked region, an aggressive extension — the page detects
+it and degrades: no string field and no scroll animation, but every word still
+readable. Without that guard a single blocked request left a black page.
+
 ## Local
 
 ```bash
@@ -41,7 +46,28 @@ python3 -m http.server 8000
 ```
 
 Open it in a real browser. Some embedded webviews block external images via
-CSP and the page will look broken through no fault of its own.
+CSP and the page will look broken through no fault of its own — running
+`tools/fetch-placeholders.mjs` (below) removes that class of problem for good.
+
+## Tools
+
+No dependencies; Node 18+.
+
+```bash
+node tools/set-image.mjs --list          # every image slot and what it points at
+node tools/set-image.mjs hero assets/hero-1280.jpg assets/hero-1920.jpg
+node tools/fetch-placeholders.mjs        # self-host the Wikimedia placeholders
+```
+
+`set-image.mjs` rewrites one slot's `src`, `srcset` and `alt`, leaving the
+per-slot `sizes`, `loading` and `fetchpriority` tuning alone. See
+[`assets/README.md`](assets/README.md) for what each slot wants.
+
+`fetch-placeholders.mjs` downloads every remote image into
+`assets/placeholders/`, repoints the page at the local copies, then asks the
+Commons API who took each photograph and under what licence and writes that
+into the footer credits and `CREDITS.md`. It needs to run somewhere that can
+reach `upload.wikimedia.org`.
 
 ## Design system
 
@@ -87,31 +113,40 @@ The phone build is not the desktop build scaled down:
 
 **1. Replace the placeholder photography.** This is the big one.
 
-Every image is currently hotlinked from Wikimedia Commons as a stand-in. They
-are mostly **CC BY / CC BY-SA and require attribution if kept** (the candlelit
-church interior is public domain). They should be swapped for the ensemble's
-own photographs:
+Every image is currently hotlinked from Wikimedia Commons as a stand-in. Two
+steps, in either order:
 
-| Slot | Wants |
-|---|---|
-| Hero | The ensemble mid-performance at St Martin's, candlelit |
-| Movement I | Justin with the cello; a close instrument detail |
-| Movement II | The hall during a candlelight concert |
-| Gallery ×5 | Performance shots, the nave, the players, the audience |
-| On Screen ×2 | Angel Studios sessions, or Wolf Hall stills if cleared |
+```bash
+node tools/fetch-placeholders.mjs   # stop hotlinking, and credit them properly
+node tools/set-image.mjs --list     # then swap them one at a time
+```
 
-Drop files into `/assets`, point the `src` at them, keep the `srcset` widths.
-The grade needs no changes.
+The first is worth doing even though they are only placeholders: it ends the
+hotlinking, survives a webview that blocks third-party images, and writes the
+attribution that CC BY / CC BY-SA actually require. The candlelit church
+interior is public domain; the rest are not.
 
-**2. Fill in the real details.**
+What each slot wants is in [`assets/README.md`](assets/README.md) — hero,
+Movement I ×2, Movement II, gallery ×5, on-screen ×2, coda. The grade needs no
+changes.
 
-- Booking email is a placeholder: `bookings@locrianensemble.london`
-- The concert diary links to St Martin's own listings — swap for the
-  ensemble's dates once there's somewhere to point
-- No upcoming-concerts data on the page yet
+**2. Fill in the real details.** Three things are still placeholders:
+
+- **Booking email** — `bookings@locrianensemble.london`, in the coda. Not a
+  live address as far as anyone here knows.
+- **Concert dates** — there is now a diary on the page, fed by the `CONCERTS`
+  array at the top of the script in `index.html`. It is empty, so the section
+  falls back to the St Martin's listings link alone; add entries and the list
+  appears. Past dates drop off by themselves.
+- **The absolute URLs in the head** — canonical, `og:`, `twitter:` all point at
+  `locrianensemble.london`, marked with a `SITE URL` comment so they can be
+  changed together. Until they are right, share previews will not resolve the
+  card at `assets/og.jpg`.
 
 **3. The domain.** `locrianensemble.co.uk` has lapsed and now serves a
-Vietnamese cockfighting streaming site. Worth recovering or replacing early.
+Vietnamese cockfighting streaming site. Worth recovering or replacing early —
+it settles the point above.
 
-**4. Nice to have.** Real audio excerpts instead of synthesised plucks; an
-Open Graph image; a favicon.
+**4. Nice to have.** Real audio excerpts instead of synthesised plucks. The
+share card at `assets/og.jpg` is typographic — a photograph of the ensemble by
+candlelight would do more work.
