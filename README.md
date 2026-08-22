@@ -69,6 +69,16 @@ Commons API who took each photograph and under what licence and writes that
 into the footer credits and `CREDITS.md`. It needs to run somewhere that can
 reach `upload.wikimedia.org`.
 
+## The kindling
+
+Between Movements I and II the scroll itself lights the church: the room goes
+dark, then a hundred candle flames catch one by one, staggered at random but
+seeded — the room lights the same way on every visit. Desktop pins the screen
+and scrubs the lighting against the scroll; a phone lights them in passing with
+no pin, which never fights the page scroll. Flames are DOM elements animated on
+transform and opacity only, fewer on a phone, flicker disabled under
+`prefers-reduced-motion`, and without GSAP the field simply stands lit.
+
 ## Sound
 
 Movement IV carries the ensemble's actual playing: ‘The Mirror and the Light’
