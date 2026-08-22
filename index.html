@@ -163,6 +163,29 @@
   .fact .k{font-family:'Cormorant Garamond',serif;font-size:clamp(25px,6vw,30px);color:var(--flame);line-height:1.1}
   .fact .v{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--smoke);margin-top:4px}
 
+  /* ===== the programme dock ===== */
+  .navlink{all:unset;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--smoke);transition:color .3s}
+  .navlink:hover{color:var(--ivory)}
+  .navlink:focus-visible{outline:1px solid var(--flame);outline-offset:4px}
+  .navlink[aria-expanded="true"]{color:var(--flame)}
+  .sheet-prog{all:unset;cursor:pointer;font-family:inherit;margin-top:26px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--flame)}
+  #prog{position:fixed;right:clamp(10px,2vw,26px);bottom:calc(clamp(10px,2vw,26px) + var(--safe-b));z-index:80;
+    width:min(92vw,340px);background:#0B0912;border:1px solid var(--hairline);border-radius:10px;
+    box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 40px rgba(224,164,88,.05);overflow:hidden}
+  .prog-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--hairline)}
+  .prog-head span{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--flame)}
+  #progClose{all:unset;cursor:pointer;color:var(--smoke);font-size:18px;line-height:1;padding:2px 6px}
+  #progClose:hover{color:var(--ivory)}
+  #progClose:focus-visible{outline:1px solid var(--flame)}
+  .prog-list{display:grid}
+  .prog-list button{all:unset;cursor:pointer;display:grid;gap:2px;padding:12px 16px;border-bottom:1px solid rgba(224,164,88,.08);transition:background .25s}
+  .prog-list button:hover,.prog-list button:focus-visible{background:rgba(224,164,88,.06)}
+  .prog-list button[aria-pressed="true"] .pw{color:var(--flame-bright)}
+  .pw{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ivory);transition:color .3s}
+  .pd{font-size:11px;color:var(--smoke)}
+  .prog-slot{display:grid}
+  .prog-slot iframe{display:block;width:100%;border:0}
+
   /* ===== the overture ===== */
   body.overture-open{overflow:hidden}
   #overture{
@@ -418,6 +441,7 @@
     <a href="#ensemble">Ensemble</a>
     <a href="#candlelight">Candlelight</a>
     <a href="#screen">On Screen</a>
+    <button class="navlink" id="progBtn" type="button" aria-expanded="false" aria-controls="prog">Programme</button>
     <a class="book" href="#concerts">Concerts</a>
   </nav>
   <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="sheet" aria-label="Open menu"><i></i><i></i></button>
@@ -431,6 +455,7 @@
     <a href="#screen"><span class="n">IV</span>On Screen</a>
     <a href="#concerts"><span class="n">Book</span>Concerts</a>
   </nav>
+  <button class="sheet-prog" id="progBtnM" type="button">♪ The programme — listen while you read</button>
   <p class="foot">St Martin-in-the-Fields · London</p>
 </div>
 
@@ -659,6 +684,29 @@
 
 </main>
 
+<!-- ================= the programme dock =================
+     The ensemble's recordings, streamed by Spotify while you browse.
+     Nothing loads until a recording is chosen; the frame only ever plays
+     what the listener pressed play on. IDs verified in MEDIA.md. -->
+<aside id="prog" hidden aria-label="The programme — recordings by the ensemble">
+  <div class="prog-head">
+    <span>The programme</span>
+    <button id="progClose" type="button" aria-label="Close the programme">&#215;</button>
+  </div>
+  <div class="prog-list" role="list">
+    <button type="button" data-embed="album/1EzC0f0vGFJLSECKWg38CG" data-h="152">
+      <span class="pw">Wolf Hall</span><span class="pd">The 2015 score — No.&thinsp;1 on the classical chart</span>
+    </button>
+    <button type="button" data-embed="track/5Nknri9YPCoKuvj50DSbYw" data-h="152">
+      <span class="pw">The Mirror and the Light</span><span class="pd">Cromwell's inner voice, 2024</span>
+    </button>
+    <button type="button" data-embed="track/1e9CHrtOPK9KvwCMx23VBc" data-h="152">
+      <span class="pw">The Unicorn's Horn</span><span class="pd">A single piece, if you have a minute</span>
+    </button>
+  </div>
+  <div class="prog-slot"></div>
+</aside>
+
 <footer>
   <span>The Locrian Ensemble of London</span>
   <span>Founded by Justin Pearson</span>
@@ -799,6 +847,35 @@
     o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
     o1.start(now); o2.start(now); o1.stop(now+2); o2.stop(now+2);
   }
+  /* ================= the programme dock ================= */
+  (function programme(){
+    const dock = document.getElementById('prog');
+    if(!dock) return;
+    const btn = document.getElementById('progBtn');
+    const btnM = document.getElementById('progBtnM');
+    const slot = dock.querySelector('.prog-slot');
+    const items = dock.querySelectorAll('.prog-list button');
+    function setOpen(open){
+      dock.hidden = !open;
+      btn && btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(open) (dock.querySelector('[aria-pressed="true"]') || items[0]).focus();
+    }
+    btn && btn.addEventListener('click', () => setOpen(dock.hidden));
+    btnM && btnM.addEventListener('click', () => { setOpen(true); });
+    document.getElementById('progClose').addEventListener('click', () => { setOpen(false); btn && btn.focus(); });
+    addEventListener('keydown', e => { if(e.key === 'Escape' && !dock.hidden) setOpen(false); });
+    items.forEach(b => b.addEventListener('click', () => {
+      items.forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+      const f = document.createElement('iframe');
+      f.src = 'https://open.spotify.com/embed/' + b.dataset.embed + '?theme=0';
+      f.height = +b.dataset.h || 152;
+      f.title = b.querySelector('.pw').textContent + ' on Spotify';
+      f.allow = 'encrypted-media; clipboard-write; fullscreen; picture-in-picture';
+      f.loading = 'lazy';
+      slot.replaceChildren(f);
+    }));
+  })();
+
   /* ================= the dark minute ================= */
   (function darkMinute(){
     const sec = document.getElementById('veiled');
