@@ -455,14 +455,14 @@
     <div class="inner">
       <div class="mvt-head reveal"><span class="mvt-num">II.</span><h2>By Candlelight</h2><span class="tempo">Allegro — by flame</span></div>
       <ul class="rep reveal" id="repList">
-        <li><button data-note="0"><span class="composer">Vivaldi</span><span class="work">The Four Seasons</span><span class="note">the signature evening</span></button><span class="pluckline"></span></li>
-        <li><button data-note="2"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Air 'on the G String'</span><span class="note">by candlelight</span></button><span class="pluckline"></span></li>
-        <li><button data-note="4"><span class="composer">Pachelbel</span><span class="work">Canon in D</span><span class="note">an audience favourite</span></button><span class="pluckline"></span></li>
-        <li><button data-note="5"><span class="composer">Handel</span><span class="work">Arrival of the Queen of Sheba</span><span class="note">a bright opening</span></button><span class="pluckline"></span></li>
-        <li><button data-note="7"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Brandenburg Concerto No 3</span><span class="note">strings at full sail</span></button><span class="pluckline"></span></li>
-        <li><button data-note="9"><span class="composer">Vivaldi</span><span class="work">Concerto for Two Cellos</span><span class="note">Justin's own territory</span></button><span class="pluckline"></span></li>
+        <li><button data-note="0" data-phrase="seasons"><span class="composer">Vivaldi</span><span class="work">The Four Seasons</span><span class="note">the signature evening</span></button><span class="pluckline"></span></li>
+        <li><button data-note="2" data-phrase="air"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Air 'on the G String'</span><span class="note">by candlelight</span></button><span class="pluckline"></span></li>
+        <li><button data-note="4" data-phrase="canon"><span class="composer">Pachelbel</span><span class="work">Canon in D</span><span class="note">an audience favourite</span></button><span class="pluckline"></span></li>
+        <li><button data-note="5" data-phrase="sheba"><span class="composer">Handel</span><span class="work">Arrival of the Queen of Sheba</span><span class="note">a bright opening</span></button><span class="pluckline"></span></li>
+        <li><button data-note="7" data-phrase="brandenburg"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Brandenburg Concerto No 3</span><span class="note">strings at full sail</span></button><span class="pluckline"></span></li>
+        <li><button data-note="9" data-phrase="twocellos"><span class="composer">Vivaldi</span><span class="work">Concerto for Two Cellos</span><span class="note">Justin's own territory</span></button><span class="pluckline"></span></li>
       </ul>
-      <p class="rep-hint" id="repHint">Touch a work to hear its open string.</p>
+      <p class="rep-hint" id="repHint">Press a work to hear its opening bars.</p>
     </div>
   </section>
 
@@ -661,6 +661,14 @@
       actx=new AC(); master=actx.createGain(); master.gain.value=.5;
       const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3400;
       master.connect(lp); lp.connect(actx.destination);
+      /* the room: a short feedback delay as a light shared reverb, so plucks,
+         phrases and the bed all sound in the same hall */
+      const dly=actx.createDelay(.5); dly.delayTime.value=.11;
+      const fb=actx.createGain(); fb.gain.value=.3;
+      const damp=actx.createBiquadFilter(); damp.type='lowpass'; damp.frequency.value=1500;
+      const wet=actx.createGain(); wet.gain.value=.16;
+      lp.connect(dly); dly.connect(damp); damp.connect(fb); fb.connect(dly);
+      damp.connect(wet); wet.connect(actx.destination);
     }
     if(actx.state==='suspended') actx.resume();
   }
@@ -668,6 +676,7 @@
     audioOn=on; if(on) ensureCtx();
     toggle.setAttribute('aria-pressed',on?'true':'false');
     toggle.textContent=on?'Sound on':'Sound off';
+    updateBed();
   }
   toggle.addEventListener('click',()=>setAudio(!audioOn));
   /* On a mouse, the first click anywhere can safely unlock audio.
@@ -691,10 +700,182 @@
     o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
     o1.start(now); o2.start(now); o1.stop(now+2); o2.stop(now+2);
   }
+  /* ================= voices & phrases ================= */
+  /* Each repertoire row plays its actual opening — a couple of bars,
+     synthesised from the public-domain score. No files, no licences. */
+  const SEMI={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+  function freqOf(name){
+    const m=/^([A-G])([#b]?)(\d)$/.exec(name);
+    return 440*Math.pow(2,(SEMI[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)+(+m[3]+1)*12-69)/12);
+  }
+  function panFor(f){ return Math.max(-.4,Math.min(.4,Math.log2(f/247)*.22)); }
+  function route(g,f){
+    if(actx.createStereoPanner){ const p=actx.createStereoPanner(); p.pan.value=panFor(f); g.connect(p); return p; }
+    return g;
+  }
+  /* a bowed string: detuned saw pair, vibrato, lowpass, soft envelope */
+  function bow(f,when,dur,bus,lvl){
+    lvl=lvl||.06;
+    const g=actx.createGain();
+    g.gain.setValueAtTime(.0001,when);
+    g.gain.linearRampToValueAtTime(lvl,when+.055);
+    g.gain.setValueAtTime(lvl,Math.max(when+.055,when+dur-.09));
+    g.gain.exponentialRampToValueAtTime(.0001,when+dur+.22);
+    const flt=actx.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=2400;
+    const o1=actx.createOscillator(); o1.type='sawtooth'; o1.frequency.value=f; o1.detune.value=-4;
+    const o2=actx.createOscillator(); o2.type='sawtooth'; o2.frequency.value=f; o2.detune.value=5;
+    const vib=actx.createOscillator(); vib.frequency.value=5.1;
+    const vg=actx.createGain(); vg.gain.value=f*.005;
+    vib.connect(vg); vg.connect(o1.frequency); vg.connect(o2.frequency);
+    o1.connect(flt); o2.connect(flt); flt.connect(g);
+    route(g,f).connect(bus);
+    [o1,o2,vib].forEach(o=>{o.start(when);o.stop(when+dur+.3);});
+  }
+  /* a cello-ish bass: triangle + sub, darker filter */
+  function bassv(f,when,dur,bus,lvl){
+    lvl=lvl||.09;
+    const g=actx.createGain();
+    g.gain.setValueAtTime(.0001,when);
+    g.gain.linearRampToValueAtTime(lvl,when+.04);
+    g.gain.setValueAtTime(lvl,Math.max(when+.04,when+dur-.08));
+    g.gain.exponentialRampToValueAtTime(.0001,when+dur+.18);
+    const flt=actx.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=850;
+    const o1=actx.createOscillator(); o1.type='triangle'; o1.frequency.value=f;
+    const o2=actx.createOscillator(); o2.type='sine'; o2.frequency.value=f/2;
+    const g2=actx.createGain(); g2.gain.value=.5;
+    o1.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g);
+    route(g,f).connect(bus);
+    [o1,o2].forEach(o=>{o.start(when);o.stop(when+dur+.25);});
+  }
+  /* [note, startBeat, beats, voice] — 'b' routes to the bass voice */
+  const PHRASES={
+    seasons:{bpm:104,notes:[['E4',0,.5],['G#4',.5,.5],['G#4',1,.5],['G#4',1.5,.5],['F#4',2,.5],['E4',2.5,.5],['B4',3,1.4],['B4',4.5,.5],['A4',5,.5],['G#4',5.5,.5],['F#4',6,1.2]]},
+    air:{bpm:56,notes:[['F#5',0,3],['E5',3,.75],['D5',3.75,.75],['C#5',4.5,1.5],
+      ['D3',0,1,'b'],['C#3',1,1,'b'],['B2',2,1,'b'],['A2',3,1,'b'],['G2',4,1,'b'],['A2',5,1,'b']]},
+    canon:{bpm:60,notes:[['D3',0,1,'b'],['A2',1,1,'b'],['B2',2,1,'b'],['F#2',3,1,'b'],['G2',4,1,'b'],['D2',5,1,'b'],['G2',6,1,'b'],['A2',7,1,'b'],
+      ['F#5',4,1],['E5',5,1],['D5',6,1],['C#5',7,1]]},
+    sheba:{bpm:126,notes:[['F5',0,.25],['D5',.25,.25],['F5',.5,.25],['D5',.75,.25],['Eb5',1,.25],['C5',1.25,.25],['D5',1.5,.25],['Bb4',1.75,.25],['C5',2,.25],['A4',2.25,.25],['Bb4',2.5,1]]},
+    brandenburg:{bpm:108,notes:[['G4',0,.5],['F#4',.5,.25],['G4',.75,.25],['D4',1,.5],['B3',1.5,.25],['C4',1.75,.25],['D4',2,.5],['G3',2.5,.5],['G4',3,1],
+      ['G2',0,1,'b'],['G2',1,1,'b'],['G2',2,1,'b'],['G2',3,1,'b']]},
+    twocellos:{bpm:96,notes:[['G3',0,.5],['G3',.5,.25],['G3',.75,.25],['Bb3',1,.5],['A3',1.5,.25],['G3',1.75,.25],['F#3',2,.5],['G3',2.5,1.4],
+      ['G2',0,1,'b'],['C3',1,1,'b'],['D3',2,1,'b'],['G2',3,1.4,'b']]}
+  };
+  let phraseBus=null;
+  function stopPhrase(){
+    if(!phraseBus) return;
+    const old=phraseBus, now=actx.currentTime;
+    old.gain.cancelScheduledValues(now);
+    old.gain.setValueAtTime(old.gain.value,now);
+    old.gain.linearRampToValueAtTime(0,now+.12);
+    setTimeout(()=>old.disconnect(),250);
+    phraseBus=null;
+  }
+  function phrase(key){
+    if(!audioOn) return 0;
+    ensureCtx(); stopPhrase();
+    const p=PHRASES[key]; if(!p) return 0;
+    phraseBus=actx.createGain(); phraseBus.gain.value=1; phraseBus.connect(master);
+    const spb=60/p.bpm, t0=actx.currentTime+.04;
+    let end=0;
+    for(const [n,st,d,v] of p.notes){
+      (v==='b'?bassv:bow)(freqOf(n), t0+st*spb, d*spb, phraseBus);
+      end=Math.max(end,(st+d)*spb);
+    }
+    return end+.3;
+  }
+
+  /* ================= the ambient bed ================= */
+  /* Once sound is on: the hall's low hum on B, a candle's crackle, and a
+     quiet inner voice that climbs the Locrian scale as you move through
+     the movements — the whole page slowly plays the mode. */
+  let bed=null;
+  function buildBed(){
+    const out=actx.createGain(); out.gain.value=0; out.connect(master);
+    /* drone: B2 + D3 + B3, breathing at a candle's pace */
+    const breath=actx.createGain(); breath.gain.value=.8; breath.connect(out);
+    [[123.47,'sine',.030],[146.83,'sine',.017],[246.94,'triangle',.011]].forEach(([f,ty,lvl])=>{
+      const o=actx.createOscillator(); o.type=ty; o.frequency.value=f;
+      const g=actx.createGain(); g.gain.value=lvl;
+      o.connect(g); g.connect(breath); o.start();
+    });
+    const lfo=actx.createOscillator(); lfo.frequency.value=.07;
+    const lg=actx.createGain(); lg.gain.value=.22;
+    lfo.connect(lg); lg.connect(breath.gain); lfo.start();
+    /* the inner voice — retuned by scroll */
+    const deg=actx.createOscillator(); deg.type='triangle'; deg.frequency.value=246.94;
+    const degG=actx.createGain(); degG.gain.value=.014;
+    const degF=actx.createBiquadFilter(); degF.type='lowpass'; degF.frequency.value=1100;
+    deg.connect(degF); degF.connect(degG); degG.connect(out); deg.start();
+    /* candle crackle: sparse filtered noise grains */
+    const nbuf=actx.createBuffer(1,actx.sampleRate/2,actx.sampleRate);
+    const nd=nbuf.getChannelData(0);
+    for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+    bed={out,deg,degG,nbuf,running:false,timer:0};
+    (function crackle(){
+      bed.timer=setTimeout(crackle,220+Math.random()*1500);
+      if(!bed.running||!audioOn) return;
+      const t=actx.currentTime;
+      const src=actx.createBufferSource(); src.buffer=bed.nbuf;
+      const bp=actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2300+Math.random()*2200; bp.Q.value=8;
+      const g=actx.createGain();
+      const lvl=.006+Math.random()*.012, dur=.02+Math.random()*.06;
+      g.gain.setValueAtTime(lvl,t);
+      g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      src.connect(bp); bp.connect(g); g.connect(bed.out);
+      src.start(t,Math.random()*.4,dur+.02);
+    })();
+  }
+  function updateBed(){
+    if(audioOn){
+      if(!bed) buildBed();
+      const now=actx.currentTime;
+      bed.running=true;
+      bed.out.gain.cancelScheduledValues(now);
+      bed.out.gain.setValueAtTime(bed.out.gain.value,now);
+      bed.out.gain.linearRampToValueAtTime(1,now+2.5);
+    } else if(bed){
+      const now=actx.currentTime;
+      bed.running=false;
+      bed.out.gain.cancelScheduledValues(now);
+      bed.out.gain.setValueAtTime(bed.out.gain.value,now);
+      bed.out.gain.linearRampToValueAtTime(0,now+.7);
+    }
+  }
+  /* scroll → scale degree. B, then upward through the mode, one landmark
+     per movement; the candlelight movement gets F natural — the diminished
+     fifth that makes Locrian Locrian. */
+  (function degreeByScroll(){
+    const stops=[['#top',246.94],['#ensemble',293.66],['.kindle',329.63],['#candlelight',349.23],['#gallery',392.00],['#screen',440.00],['#concerts',493.88]];
+    let cur=0, tick=0;
+    addEventListener('scroll',()=>{
+      if(tick) return;
+      tick=setTimeout(()=>{
+        tick=0;
+        if(!bed||!bed.running) return;
+        const mid=scrollY+innerHeight*.5;
+        let best=0;
+        for(let i=0;i<stops.length;i++){
+          const el=document.querySelector(stops[i][0]);
+          if(el && el.getBoundingClientRect().top+scrollY < mid) best=i;
+        }
+        if(best!==cur){
+          cur=best;
+          const now=actx.currentTime;
+          bed.deg.frequency.cancelScheduledValues(now);
+          bed.deg.frequency.setValueAtTime(bed.deg.frequency.value,now);
+          bed.deg.frequency.exponentialRampToValueAtTime(stops[best][1],now+1.4);
+          bed.degG.gain.cancelScheduledValues(now);
+          bed.degG.gain.setValueAtTime(.028,now);
+          bed.degG.gain.linearRampToValueAtTime(.014,now+2);
+        }
+      },200);
+    },{passive:true});
+  })();
+
   /* copy that matches the input device */
   if(!canHover){
     document.getElementById('hintText').textContent='Drag a finger across the strings — tuned to the Locrian mode.';
-    document.getElementById('repHint').textContent='Tap a work to hear its open string.';
+    document.getElementById('repHint').textContent='Tap a work to hear its opening bars.';
   }
 
   /* ================= the overture ================= */
@@ -888,12 +1069,20 @@
     document.querySelector('.hint').hidden = true;
   }
 
-  /* repertoire plucks — hover on desktop, tap on touch */
+  /* repertoire — hover previews the open string; a press plays the work's
+     actual opening, and the row stays lit for as long as it sounds */
+  let litTimer=0;
   document.querySelectorAll('#repList button').forEach(b=>{
     const li=b.parentElement;
-    const play=()=>{ if(!audioOn) setAudio(true); pluck(parseInt(b.dataset.note,10),.7); };
-    if(canHover) b.addEventListener('mouseenter',play);
-    b.addEventListener('click',()=>{ play(); li.classList.add('lit'); setTimeout(()=>li.classList.remove('lit'),900); });
+    if(canHover) b.addEventListener('mouseenter',()=>{ if(audioOn) pluck(parseInt(b.dataset.note,10),.35); });
+    b.addEventListener('click',()=>{
+      if(!audioOn) setAudio(true);
+      const dur=phrase(b.dataset.phrase)||.9;
+      document.querySelectorAll('#repList .lit').forEach(x=>x.classList.remove('lit'));
+      clearTimeout(litTimer);
+      li.classList.add('lit');
+      litTimer=setTimeout(()=>li.classList.remove('lit'), dur*1000);
+    });
   });
 
   /* ================= the kindling ================= */
