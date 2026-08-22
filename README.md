@@ -11,15 +11,9 @@ Static. One file. No build step.
 
 ## The idea
 
-The page opens the way the concert does: an overture — dark room, one string
-humming while the fonts load, and a choice. *Enter with sound* unlocks the Web
-Audio layer for everything after it and answers with the open-string B.
-
 The hero is a playable instrument. A field of golden strings rendered in
 Three.js: drag a cursor or a finger across them and each one bows with damped
-string physics *and* sounds a note through the Web Audio API. The field is
-tuned to the **Locrian mode on B** — the ensemble's own name, made audible.
-Candle embers drift upward through it.
+string physics. Candle embers drift upward through it.
 
 Everything else is deliberately quiet so that one idea carries the page.
 
@@ -32,7 +26,6 @@ tempo marking rather than a generic section label.
 |---|---|
 | Three.js r128 | the string field and embers (CDN) |
 | GSAP 3.12 + ScrollTrigger | reveals, parallax, pinned gallery (CDN) |
-| Web Audio API | string plucks, synthesised — no audio files |
 | Cormorant Garamond / Archivo | display / body (Google Fonts) |
 
 No framework, no bundler, no dependencies to install.
@@ -75,19 +68,15 @@ reach `upload.wikimedia.org`.
 
 ## The signature moments
 
-- **The overture** — the loader is a tuning-up: a standing-wave string drawn in
-  SVG, then the choice of entering with sound or quietly.
 - **The kindling** — see below; scrolling lights the church.
 - **The dark minute** — a near-black interlude where the pointer carries a
   candle; the words read only inside its light. On touch the flame is carried
   for you. Keyboard, reduced-motion and no-JS readers get plain text.
 - **The snuffing** — a single candle between the Wolf Hall cards gutters and is
   put out by the scroll, smoke curl and all.
-- **The repertoire is a listening menu** — each work plays its actual opening
-  bars, synthesised from the public-domain score. Under it all, once sound is
-  on: a drone on B breathing at a candle's pace, sparse crackle, and an inner
-  voice that climbs the Locrian scale one degree per movement — F natural, the
-  mode's diminished fifth, lands on the candlelight movement.
+- **The repertoire is a listening menu** — no synthesised notes. Each row
+  links straight to a real recording on Spotify, mostly the Academy of St
+  Martin in the Fields under Marriner — the same room this ensemble plays.
 - **One flame lights everything** — a single clock breathes the veil over the
   photographs, the embers, the strings and the kindle field together.
 - **The Programme** — a docked, candlelit Spotify player with the ensemble's
@@ -112,12 +101,24 @@ transform and opacity only, fewer on a phone, flicker disabled under
 
 ## Sound
 
-Movement IV carries the ensemble's actual playing: ‘The Mirror and the Light’
-from Debbie Wiseman's *Wolf Hall* score, streamed by Spotify. Nothing loads
-from Spotify until the reader clicks — until then it is a facade in the page's
-own palette, and a plain link if the script never runs. That keeps a third
-party off the critical path and means a blocked embed can never paint a white
-box into a black page.
+There is no synthesised audio anywhere on the page — a first pass tried it
+(a Web Audio pluck on the strings, an ambient bed, a phrase engine for the
+repertoire list) and it read as cheap next to what real recordings could do,
+so it came back out. Every sound on the page now is a real recording:
+
+- **Movement IV** carries the ensemble's actual playing: ‘The Mirror and the
+  Light’ from Debbie Wiseman's *Wolf Hall* score, streamed by Spotify. Nothing
+  loads from Spotify until the reader clicks — until then it is a facade in
+  the page's own palette, and a plain link if the script never runs. That
+  keeps a third party off the critical path and means a blocked embed can
+  never paint a white box into a black page.
+- **The repertoire list** in Movement II links each work straight out to
+  Spotify — mostly the Academy of St Martin in the Fields under Sir Neville
+  Marriner, the same room this ensemble plays in. Plain `<a target="_blank">`
+  links, so they work with the script off.
+- **The Programme dock**, docked from the nav, is the same pattern as
+  Movement IV — a facade that only fetches Spotify once a recording is
+  chosen.
 
 Everything researched — recordings, photography sources, verified facts, and
 one unresolved contradiction — is in [`MEDIA.md`](MEDIA.md).

@@ -107,7 +107,12 @@
   .menu-btn i{display:block;height:1px;width:100%;background:var(--ivory);transition:transform .35s,opacity .25s}
   .menu-btn[aria-expanded="true"] i:first-child{transform:translateY(3.5px) rotate(45deg)}
   .menu-btn[aria-expanded="true"] i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
-  .sheet{position:fixed;inset:0;z-index:65;background:rgba(7,6,11,.97);backdrop-filter:blur(20px);display:flex;flex-direction:column;justify-content:center;
+  /* justify-content:safe center — centred menus on a tall phone, but on a
+     short one (SE-sized, or once Programme/Lights down joined the nav links)
+     it falls back to start-aligned and scrollable rather than clipping the
+     lower rows off the bottom of the screen with no way to reach them. */
+  .sheet{position:fixed;inset:0;z-index:65;background:rgba(7,6,11,.97);backdrop-filter:blur(20px);display:flex;flex-direction:column;justify-content:center;justify-content:safe center;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
     padding:calc(90px + var(--safe-t)) var(--gut) calc(40px + var(--safe-b));opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
   .sheet.open{opacity:1;visibility:visible}
   .sheet a{display:block;text-decoration:none;padding:18px 0;border-bottom:1px solid var(--hairline);font-family:'Cormorant Garamond',serif;font-size:clamp(30px,9vw,42px);font-weight:500}
@@ -116,9 +121,10 @@
 
   .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
     padding:calc(96px + var(--safe-t)) var(--gut) calc(112px + var(--safe-b))}
+  /* No bespoke grade here — it shares .plate/.plate.vignette with the coda and
+     the candlelight bleed, so it sits in the room the same way they do rather
+     than reading as a harder rectangle laid over the string field. */
   .hero-plate{position:absolute;inset:-6% 0}
-  .hero-plate img{filter:saturate(.38) contrast(1.2) brightness(.44) sepia(.4)}
-  .hero-plate::after{background:radial-gradient(70% 55% at 50% 58%, rgba(224,164,88,.26), transparent 70%),linear-gradient(180deg, rgba(7,6,11,.78), rgba(7,6,11,.38) 40%, rgba(7,6,11,.96))}
   .hero > *{position:relative;z-index:3}
   .eyebrow{font-size:clamp(10px,2.6vw,12px);letter-spacing:.28em;text-transform:uppercase;color:var(--flame);margin-bottom:22px;line-height:1.7}
   h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(46px,13vw,124px);line-height:.96}
@@ -129,8 +135,6 @@
   .hint{position:absolute;left:0;right:0;bottom:calc(22px + var(--safe-b));z-index:4;display:flex;flex-direction:column;align-items:center;gap:12px;padding:0 var(--gut)}
   @media(min-width:761px){.hint{flex-direction:row;justify-content:center;gap:16px;bottom:34px}}
   .hint em{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(13px,3.4vw,15px);color:var(--smoke);text-align:center}
-  .sound-toggle{background:rgba(7,6,11,.55);border:1px solid var(--hairline);color:var(--ivory);font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;min-height:44px;padding:0 20px;border-radius:2px;cursor:pointer;transition:border-color .3s,color .3s}
-  .sound-toggle:hover,.sound-toggle[aria-pressed="true"]{border-color:var(--flame);color:var(--flame)}
 
   main{position:relative;z-index:3}
   .movement{position:relative;background:var(--nave);padding:clamp(72px,11vh,150px) var(--gut)}
@@ -190,7 +194,8 @@
   .navlink:hover{color:var(--ivory)}
   .navlink:focus-visible{outline:1px solid var(--flame);outline-offset:4px}
   .navlink[aria-expanded="true"]{color:var(--flame)}
-  .sheet-prog{all:unset;cursor:pointer;font-family:inherit;margin-top:26px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--flame)}
+  .sheet-prog{all:unset;cursor:pointer;font-family:inherit;display:flex;align-items:center;min-height:44px;margin-top:14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--flame)}
+  .sheet-prog:first-of-type{margin-top:26px}
   #prog{position:fixed;right:clamp(10px,2vw,26px);bottom:calc(clamp(10px,2vw,26px) + var(--safe-b));z-index:80;
     width:min(92vw,340px);background:#0B0912;border:1px solid var(--hairline);border-radius:10px;
     box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 40px rgba(224,164,88,.05);overflow:hidden}
@@ -207,37 +212,6 @@
   .pd{font-size:11px;color:var(--smoke)}
   .prog-slot{display:grid}
   .prog-slot iframe{display:block;width:100%;border:0}
-
-  /* ===== the overture ===== */
-  body.overture-open{overflow:hidden}
-  #overture{
-    position:fixed;inset:0;z-index:120;background:var(--nave);
-    display:grid;grid-template-rows:1fr auto auto auto auto 1fr;justify-items:center;align-items:center;
-    padding:0 var(--gut);text-align:center;
-    transition:opacity 1.1s cubic-bezier(.4,0,.2,1),visibility 0s 1.1s;
-  }
-  #overture.leaving{opacity:0;visibility:hidden;pointer-events:none}
-  #ovString{position:relative;grid-row:3;width:100vw;height:110px;margin:2px 0 6px;pointer-events:none}
-  #ovString path{stroke:var(--flame);stroke-width:1.4;opacity:.8}
-  .ov-word{position:relative;z-index:2;display:grid;gap:6px;grid-row:2}
-  .ov-eyebrow{font-size:clamp(11px,2.6vw,13px);letter-spacing:.44em;text-transform:uppercase;color:var(--ivory);padding-left:.44em}
-  .ov-of{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(20px,4.6vw,28px);color:var(--flame)}
-  .ov-tag{position:relative;z-index:2;grid-row:4;margin-top:0;max-width:34ch;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,3.4vw,16.5px);color:var(--smoke);opacity:0;transition:opacity .9s .15s}
-  .ov-enter{position:relative;z-index:2;grid-row:5;display:flex;flex-direction:column;gap:12px;margin-top:26px;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .8s,transform .8s}
-  @media(min-width:521px){.ov-enter{flex-direction:row;gap:16px}}
-  #overture.ready .ov-tag{opacity:1}
-  #overture.ready .ov-enter{opacity:1;transform:none;pointer-events:auto}
-  #overture.ready .ov-tuning{opacity:0}
-  .ov-tuning{position:absolute;left:50%;bottom:calc(34px + var(--safe-b));transform:translateX(-50%);
-    font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--smoke);transition:opacity .5s}
-  .ov-tuning span{animation:ovdot 1.4s infinite}
-  .ov-tuning span:nth-child(2){animation-delay:.2s}
-  .ov-tuning span:nth-child(3){animation-delay:.4s}
-  @keyframes ovdot{0%,60%,100%{opacity:.25}30%{opacity:1}}
-  @media (prefers-reduced-motion: reduce){
-    #overture{transition-duration:.4s}
-    .ov-tuning span{animation:none}
-  }
 
   /* ===== the kindling — scroll lights the church ===== */
   .kindle{position:relative;background:var(--nave)}
@@ -273,17 +247,17 @@
   .bleed .inner{position:relative;z-index:3;width:100%}
   .rep{list-style:none;margin-top:4px}
   .rep li{position:relative}
-  .rep button{all:unset;display:grid;width:100%;cursor:pointer;box-sizing:border-box;grid-template-columns:1fr;gap:3px;align-items:baseline;padding:15px 2px;min-height:56px}
-  @media(min-width:641px){.rep button{grid-template-columns:minmax(120px,200px) 1fr auto;gap:18px;padding:20px 6px}}
+  .rep a{all:unset;display:grid;width:100%;cursor:pointer;box-sizing:border-box;grid-template-columns:1fr;gap:3px;align-items:baseline;padding:15px 2px;min-height:56px}
+  @media(min-width:641px){.rep a{grid-template-columns:minmax(120px,200px) 1fr auto;gap:18px;padding:20px 6px}}
   .rep .composer{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--smoke)}
   .rep .work{font-family:'Cormorant Garamond',serif;font-size:clamp(21px,5.4vw,30px);font-weight:500;line-height:1.15;transition:color .3s}
   .rep .note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:#B06A78}
   .rep li::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--hairline)}
   .rep li .pluckline{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--flame);z-index:2;transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.22,1,.36,1)}
   /* touch has no hover — light up on press and on focus instead */
-  .rep button:active ~ .pluckline,.rep button:focus-visible ~ .pluckline,.rep li.lit .pluckline{transform:scaleX(1)}
-  .rep button:active .work,.rep li.lit .work{color:var(--flame-bright)}
-  @media(hover:hover){.rep li:hover .pluckline{transform:scaleX(1)}.rep button:hover .work{color:var(--flame-bright)}}
+  .rep a:active ~ .pluckline,.rep a:focus-visible ~ .pluckline{transform:scaleX(1)}
+  .rep a:active .work{color:var(--flame-bright)}
+  @media(hover:hover){.rep li:hover .pluckline{transform:scaleX(1)}.rep a:hover .work{color:var(--flame-bright)}}
   .rep-hint{margin-top:16px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--smoke);font-size:14.5px}
 
   .gallery-wrap{position:relative;overflow:hidden;background:var(--nave)}
@@ -426,29 +400,7 @@
   }
 </style>
 </head>
-<body class="overture-open">
-
-<!-- ================= the overture =================
-     The page opens the way the concert does: dark, one string, and a choice.
-     The string hums while the room readies; the buttons appear when the fonts
-     are in. "Enter with sound" is the audio unlock for everything after it.
-     Without JavaScript the overlay never shows (see the noscript rule). -->
-<div id="overture" role="dialog" aria-modal="true" aria-label="The Locrian Ensemble of London — enter with or without sound">
-  <svg id="ovString" viewBox="0 0 1000 160" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 80 L1000 80" fill="none"/>
-  </svg>
-  <div class="ov-word">
-    <span class="ov-eyebrow">The Locrian Ensemble</span>
-    <em class="ov-of">of London</em>
-  </div>
-  <p class="ov-tag">One string field, tuned to the mode that bears the name.</p>
-  <div class="ov-enter">
-    <button class="btn gold" id="ovSound" type="button">Enter with sound</button>
-    <button class="btn ghost" id="ovQuiet" type="button">Enter quietly</button>
-  </div>
-  <p class="ov-tuning" aria-hidden="true">tuning<span>.</span><span>.</span><span>.</span></p>
-</div>
-<noscript><style>#overture{display:none}</style></noscript>
+<body>
 
 <div id="stage" aria-hidden="true"><canvas id="strings"></canvas></div>
 
@@ -498,8 +450,7 @@
   <p class="of">of London</p>
   <p class="lede">London's leading string soloists — four decades of candlelight concerts, recordings and film scores.</p>
   <div class="hint">
-    <em id="hintText">Draw across the strings — each is tuned to the Locrian mode.</em>
-    <button class="sound-toggle" id="soundToggle" aria-pressed="false">Sound off</button>
+    <em id="hintText">Draw across the strings and set them bowing.</em>
   </div>
 </section>
 
@@ -563,15 +514,18 @@
     </figure>
     <div class="inner">
       <div class="mvt-head reveal" data-num="II"><span class="mvt-num">II.</span><h2>By Candlelight</h2><span class="tempo">Allegro — by flame</span></div>
+      <!-- Real recordings, not synthesised — mostly the Academy of St Martin
+           in the Fields under Marriner, the same room this ensemble plays.
+           IDs verified in MEDIA.md. -->
       <ul class="rep reveal" id="repList">
-        <li><button data-note="0" data-phrase="seasons"><span class="composer">Vivaldi</span><span class="work">The Four Seasons</span><span class="note">the signature evening</span></button><span class="pluckline"></span></li>
-        <li><button data-note="2" data-phrase="air"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Air 'on the G String'</span><span class="note">by candlelight</span></button><span class="pluckline"></span></li>
-        <li><button data-note="4" data-phrase="canon"><span class="composer">Pachelbel</span><span class="work">Canon in D</span><span class="note">an audience favourite</span></button><span class="pluckline"></span></li>
-        <li><button data-note="5" data-phrase="sheba"><span class="composer">Handel</span><span class="work">Arrival of the Queen of Sheba</span><span class="note">a bright opening</span></button><span class="pluckline"></span></li>
-        <li><button data-note="7" data-phrase="brandenburg"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Brandenburg Concerto No 3</span><span class="note">strings at full sail</span></button><span class="pluckline"></span></li>
-        <li><button data-note="9" data-phrase="twocellos"><span class="composer">Vivaldi</span><span class="work">Concerto for Two Cellos</span><span class="note">Justin's own territory</span></button><span class="pluckline"></span></li>
+        <li><a href="https://open.spotify.com/track/5JQuMHOLMDxOaW08PWedES" target="_blank" rel="noopener" aria-label="Listen to Vivaldi's The Four Seasons on Spotify"><span class="composer">Vivaldi</span><span class="work">The Four Seasons</span><span class="note">the signature evening</span></a><span class="pluckline"></span></li>
+        <li><a href="https://open.spotify.com/track/5sO0w5aJCTQSqAQbg2EEVU" target="_blank" rel="noopener" aria-label="Listen to Bach's Air on the G String on Spotify"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Air 'on the G String'</span><span class="note">by candlelight</span></a><span class="pluckline"></span></li>
+        <li><a href="https://open.spotify.com/track/3WB0oOhULy7hhvuy6TC04B" target="_blank" rel="noopener" aria-label="Listen to Pachelbel's Canon in D on Spotify"><span class="composer">Pachelbel</span><span class="work">Canon in D</span><span class="note">an audience favourite</span></a><span class="pluckline"></span></li>
+        <li><a href="https://open.spotify.com/track/1PQt1t3Gnzig1K49t1eGgy" target="_blank" rel="noopener" aria-label="Listen to Handel's Arrival of the Queen of Sheba on Spotify"><span class="composer">Handel</span><span class="work">Arrival of the Queen of Sheba</span><span class="note">a bright opening</span></a><span class="pluckline"></span></li>
+        <li><a href="https://open.spotify.com/track/6fVGkeLdlPOKsDnrVDy02O" target="_blank" rel="noopener" aria-label="Listen to Bach's Brandenburg Concerto No 3 on Spotify"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Brandenburg Concerto No 3</span><span class="note">strings at full sail</span></a><span class="pluckline"></span></li>
+        <li><a href="https://open.spotify.com/track/21Hol2YEh0KDWsW3SlVnRb" target="_blank" rel="noopener" aria-label="Listen to Vivaldi's Concerto for Two Cellos on Spotify"><span class="composer">Vivaldi</span><span class="work">Concerto for Two Cellos</span><span class="note">Justin's own territory</span></a><span class="pluckline"></span></li>
       </ul>
-      <p class="rep-hint" id="repHint">Press a work to hear its opening bars.</p>
+      <p class="rep-hint" id="repHint">Press a work to open it on Spotify.</p>
     </div>
   </section>
 
@@ -834,60 +788,12 @@
     document.body.classList.toggle('nav-open', open);
   }
   menuBtn.addEventListener('click', () => setMenu(!sheet.classList.contains('open')));
-  sheet.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  /* every sheet control leaves — a plain nav link, or a button that opens its
+     own overlay (Programme, Lights down). Left open behind either, the dark
+     sheet is a second full-screen layer doing nothing. */
+  sheet.querySelectorAll('a, button').forEach(el => el.addEventListener('click', () => setMenu(false)));
   addEventListener('keydown', e => { if(e.key === 'Escape') setMenu(false); });
 
-  /* ================= audio ================= */
-  let actx=null, master=null, audioOn=false;
-  const toggle=document.getElementById('soundToggle');
-  const degrees=[0,1,3,5,6,8,10,12,13,15,17,18,20,22,24];
-  const B3=246.94;
-  const freqFor=i=>B3*Math.pow(2,degrees[Math.min(i,degrees.length-1)]/12);
-  function ensureCtx(){
-    if(!actx){
-      const AC=window.AudioContext||window.webkitAudioContext;
-      actx=new AC(); master=actx.createGain(); master.gain.value=.5;
-      const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3400;
-      master.connect(lp); lp.connect(actx.destination);
-      /* the room: a short feedback delay as a light shared reverb, so plucks,
-         phrases and the bed all sound in the same hall */
-      const dly=actx.createDelay(.5); dly.delayTime.value=.11;
-      const fb=actx.createGain(); fb.gain.value=.3;
-      const damp=actx.createBiquadFilter(); damp.type='lowpass'; damp.frequency.value=1500;
-      const wet=actx.createGain(); wet.gain.value=.16;
-      lp.connect(dly); dly.connect(damp); damp.connect(fb); fb.connect(dly);
-      damp.connect(wet); wet.connect(actx.destination);
-    }
-    if(actx.state==='suspended') actx.resume();
-  }
-  function setAudio(on){
-    audioOn=on; if(on) ensureCtx();
-    toggle.setAttribute('aria-pressed',on?'true':'false');
-    toggle.textContent=on?'Sound on':'Sound off';
-    updateBed();
-  }
-  toggle.addEventListener('click',()=>setAudio(!audioOn));
-  /* On a mouse, the first click anywhere can safely unlock audio.
-     On touch, a stray tap must never start sound — the toggle is the only way in. */
-  if(canHover){
-    document.addEventListener('pointerdown',function once(){ if(!audioOn) setAudio(true); document.removeEventListener('pointerdown',once); });
-  }
-  const last={};
-  function pluck(i,vel){
-    if(!audioOn||!actx) return;
-    const now=actx.currentTime;
-    if(last[i]&&now-last[i]<.09) return;
-    last[i]=now;
-    const f=freqFor(i), g=actx.createGain();
-    g.gain.setValueAtTime(.0001,now);
-    g.gain.exponentialRampToValueAtTime(.10+.14*Math.min(vel,1),now+.008);
-    g.gain.exponentialRampToValueAtTime(.0001,now+1.9);
-    const o1=actx.createOscillator(); o1.type='triangle'; o1.frequency.value=f;
-    const o2=actx.createOscillator(); o2.type='sine'; o2.frequency.value=f*2.001;
-    const g2=actx.createGain(); g2.gain.value=.18;
-    o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
-    o1.start(now); o2.start(now); o1.stop(now+2); o2.stop(now+2);
-  }
   /* ================= concert mode ================= */
   (function concertMode(){
     const room = document.getElementById('concert');
@@ -1053,243 +959,10 @@
     })();
   })();
 
-  /* ================= voices & phrases ================= */
-  /* Each repertoire row plays its actual opening — a couple of bars,
-     synthesised from the public-domain score. No files, no licences. */
-  const SEMI={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
-  function freqOf(name){
-    const m=/^([A-G])([#b]?)(\d)$/.exec(name);
-    return 440*Math.pow(2,(SEMI[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)+(+m[3]+1)*12-69)/12);
-  }
-  function panFor(f){ return Math.max(-.4,Math.min(.4,Math.log2(f/247)*.22)); }
-  function route(g,f){
-    if(actx.createStereoPanner){ const p=actx.createStereoPanner(); p.pan.value=panFor(f); g.connect(p); return p; }
-    return g;
-  }
-  /* a bowed string: detuned saw pair, vibrato, lowpass, soft envelope */
-  function bow(f,when,dur,bus,lvl){
-    lvl=lvl||.06;
-    const g=actx.createGain();
-    g.gain.setValueAtTime(.0001,when);
-    g.gain.linearRampToValueAtTime(lvl,when+.055);
-    g.gain.setValueAtTime(lvl,Math.max(when+.055,when+dur-.09));
-    g.gain.exponentialRampToValueAtTime(.0001,when+dur+.22);
-    const flt=actx.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=2400;
-    const o1=actx.createOscillator(); o1.type='sawtooth'; o1.frequency.value=f; o1.detune.value=-4;
-    const o2=actx.createOscillator(); o2.type='sawtooth'; o2.frequency.value=f; o2.detune.value=5;
-    const vib=actx.createOscillator(); vib.frequency.value=5.1;
-    const vg=actx.createGain(); vg.gain.value=f*.005;
-    vib.connect(vg); vg.connect(o1.frequency); vg.connect(o2.frequency);
-    o1.connect(flt); o2.connect(flt); flt.connect(g);
-    route(g,f).connect(bus);
-    [o1,o2,vib].forEach(o=>{o.start(when);o.stop(when+dur+.3);});
-  }
-  /* a cello-ish bass: triangle + sub, darker filter */
-  function bassv(f,when,dur,bus,lvl){
-    lvl=lvl||.09;
-    const g=actx.createGain();
-    g.gain.setValueAtTime(.0001,when);
-    g.gain.linearRampToValueAtTime(lvl,when+.04);
-    g.gain.setValueAtTime(lvl,Math.max(when+.04,when+dur-.08));
-    g.gain.exponentialRampToValueAtTime(.0001,when+dur+.18);
-    const flt=actx.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=850;
-    const o1=actx.createOscillator(); o1.type='triangle'; o1.frequency.value=f;
-    const o2=actx.createOscillator(); o2.type='sine'; o2.frequency.value=f/2;
-    const g2=actx.createGain(); g2.gain.value=.5;
-    o1.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g);
-    route(g,f).connect(bus);
-    [o1,o2].forEach(o=>{o.start(when);o.stop(when+dur+.25);});
-  }
-  /* [note, startBeat, beats, voice] — 'b' routes to the bass voice */
-  const PHRASES={
-    seasons:{bpm:104,notes:[['E4',0,.5],['G#4',.5,.5],['G#4',1,.5],['G#4',1.5,.5],['F#4',2,.5],['E4',2.5,.5],['B4',3,1.4],['B4',4.5,.5],['A4',5,.5],['G#4',5.5,.5],['F#4',6,1.2]]},
-    air:{bpm:56,notes:[['F#5',0,3],['E5',3,.75],['D5',3.75,.75],['C#5',4.5,1.5],
-      ['D3',0,1,'b'],['C#3',1,1,'b'],['B2',2,1,'b'],['A2',3,1,'b'],['G2',4,1,'b'],['A2',5,1,'b']]},
-    canon:{bpm:60,notes:[['D3',0,1,'b'],['A2',1,1,'b'],['B2',2,1,'b'],['F#2',3,1,'b'],['G2',4,1,'b'],['D2',5,1,'b'],['G2',6,1,'b'],['A2',7,1,'b'],
-      ['F#5',4,1],['E5',5,1],['D5',6,1],['C#5',7,1]]},
-    sheba:{bpm:126,notes:[['F5',0,.25],['D5',.25,.25],['F5',.5,.25],['D5',.75,.25],['Eb5',1,.25],['C5',1.25,.25],['D5',1.5,.25],['Bb4',1.75,.25],['C5',2,.25],['A4',2.25,.25],['Bb4',2.5,1]]},
-    brandenburg:{bpm:108,notes:[['G4',0,.5],['F#4',.5,.25],['G4',.75,.25],['D4',1,.5],['B3',1.5,.25],['C4',1.75,.25],['D4',2,.5],['G3',2.5,.5],['G4',3,1],
-      ['G2',0,1,'b'],['G2',1,1,'b'],['G2',2,1,'b'],['G2',3,1,'b']]},
-    twocellos:{bpm:96,notes:[['G3',0,.5],['G3',.5,.25],['G3',.75,.25],['Bb3',1,.5],['A3',1.5,.25],['G3',1.75,.25],['F#3',2,.5],['G3',2.5,1.4],
-      ['G2',0,1,'b'],['C3',1,1,'b'],['D3',2,1,'b'],['G2',3,1.4,'b']]}
-  };
-  let phraseBus=null;
-  function stopPhrase(){
-    if(!phraseBus) return;
-    const old=phraseBus, now=actx.currentTime;
-    old.gain.cancelScheduledValues(now);
-    old.gain.setValueAtTime(old.gain.value,now);
-    old.gain.linearRampToValueAtTime(0,now+.12);
-    setTimeout(()=>old.disconnect(),250);
-    phraseBus=null;
-  }
-  function phrase(key){
-    if(!audioOn) return 0;
-    ensureCtx(); stopPhrase();
-    const p=PHRASES[key]; if(!p) return 0;
-    phraseBus=actx.createGain(); phraseBus.gain.value=1; phraseBus.connect(master);
-    const spb=60/p.bpm, t0=actx.currentTime+.04;
-    let end=0;
-    for(const [n,st,d,v] of p.notes){
-      (v==='b'?bassv:bow)(freqOf(n), t0+st*spb, d*spb, phraseBus);
-      end=Math.max(end,(st+d)*spb);
-    }
-    return end+.3;
-  }
-
-  /* ================= the ambient bed ================= */
-  /* Once sound is on: the hall's low hum on B, a candle's crackle, and a
-     quiet inner voice that climbs the Locrian scale as you move through
-     the movements — the whole page slowly plays the mode. */
-  let bed=null;
-  function buildBed(){
-    const out=actx.createGain(); out.gain.value=0; out.connect(master);
-    /* drone: B2 + D3 + B3, breathing at a candle's pace */
-    const breath=actx.createGain(); breath.gain.value=.8; breath.connect(out);
-    [[123.47,'sine',.030],[146.83,'sine',.017],[246.94,'triangle',.011]].forEach(([f,ty,lvl])=>{
-      const o=actx.createOscillator(); o.type=ty; o.frequency.value=f;
-      const g=actx.createGain(); g.gain.value=lvl;
-      o.connect(g); g.connect(breath); o.start();
-    });
-    const lfo=actx.createOscillator(); lfo.frequency.value=.07;
-    const lg=actx.createGain(); lg.gain.value=.22;
-    lfo.connect(lg); lg.connect(breath.gain); lfo.start();
-    /* the inner voice — retuned by scroll */
-    const deg=actx.createOscillator(); deg.type='triangle'; deg.frequency.value=246.94;
-    const degG=actx.createGain(); degG.gain.value=.014;
-    const degF=actx.createBiquadFilter(); degF.type='lowpass'; degF.frequency.value=1100;
-    deg.connect(degF); degF.connect(degG); degG.connect(out); deg.start();
-    /* candle crackle: sparse filtered noise grains */
-    const nbuf=actx.createBuffer(1,actx.sampleRate/2,actx.sampleRate);
-    const nd=nbuf.getChannelData(0);
-    for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
-    bed={out,deg,degG,nbuf,running:false,timer:0};
-    (function crackle(){
-      bed.timer=setTimeout(crackle,220+Math.random()*1500);
-      if(!bed.running||!audioOn) return;
-      const t=actx.currentTime;
-      const src=actx.createBufferSource(); src.buffer=bed.nbuf;
-      const bp=actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2300+Math.random()*2200; bp.Q.value=8;
-      const g=actx.createGain();
-      const lvl=.006+Math.random()*.012, dur=.02+Math.random()*.06;
-      g.gain.setValueAtTime(lvl,t);
-      g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-      src.connect(bp); bp.connect(g); g.connect(bed.out);
-      src.start(t,Math.random()*.4,dur+.02);
-    })();
-  }
-  function updateBed(){
-    if(audioOn){
-      if(!bed) buildBed();
-      const now=actx.currentTime;
-      bed.running=true;
-      bed.out.gain.cancelScheduledValues(now);
-      bed.out.gain.setValueAtTime(bed.out.gain.value,now);
-      bed.out.gain.linearRampToValueAtTime(1,now+2.5);
-    } else if(bed){
-      const now=actx.currentTime;
-      bed.running=false;
-      bed.out.gain.cancelScheduledValues(now);
-      bed.out.gain.setValueAtTime(bed.out.gain.value,now);
-      bed.out.gain.linearRampToValueAtTime(0,now+.7);
-    }
-  }
-  /* scroll → scale degree. B, then upward through the mode, one landmark
-     per movement; the candlelight movement gets F natural — the diminished
-     fifth that makes Locrian Locrian. */
-  (function degreeByScroll(){
-    const stops=[['#top',246.94],['#ensemble',293.66],['.kindle',329.63],['#candlelight',349.23],['#gallery',392.00],['#screen',440.00],['#concerts',493.88]];
-    let cur=0, tick=0;
-    addEventListener('scroll',()=>{
-      if(tick) return;
-      tick=setTimeout(()=>{
-        tick=0;
-        if(!bed||!bed.running) return;
-        const mid=scrollY+innerHeight*.5;
-        let best=0;
-        for(let i=0;i<stops.length;i++){
-          const el=document.querySelector(stops[i][0]);
-          if(el && el.getBoundingClientRect().top+scrollY < mid) best=i;
-        }
-        if(best!==cur){
-          cur=best;
-          const now=actx.currentTime;
-          bed.deg.frequency.cancelScheduledValues(now);
-          bed.deg.frequency.setValueAtTime(bed.deg.frequency.value,now);
-          bed.deg.frequency.exponentialRampToValueAtTime(stops[best][1],now+1.4);
-          bed.degG.gain.cancelScheduledValues(now);
-          bed.degG.gain.setValueAtTime(.028,now);
-          bed.degG.gain.linearRampToValueAtTime(.014,now+2);
-        }
-      },200);
-    },{passive:true});
-  })();
-
   /* copy that matches the input device */
   if(!canHover){
-    document.getElementById('hintText').textContent='Drag a finger across the strings — tuned to the Locrian mode.';
-    document.getElementById('repHint').textContent='Tap a work to hear its opening bars.';
+    document.getElementById('hintText').textContent='Drag a finger across the strings and set them bowing.';
   }
-
-  /* ================= the overture ================= */
-  (function overture(){
-    const ov = document.getElementById('overture');
-    if(!ov) return;
-    const path = ov.querySelector('#ovString path');
-
-    /* --- the string: a plucked standing wave, drawn at ~60 points --- */
-    let amp = 0, target = 2.2, phase = 0, raf = 0;
-    const PTS = 64;
-    function draw(){
-      phase += .085;
-      amp += (target - amp) * .06;
-      let d = 'M0 80';
-      for(let i=1;i<=PTS;i++){
-        const x = 1000*i/PTS, t = i/PTS;
-        const env = Math.sin(Math.PI*t);                       /* fixed ends */
-        const y = 80
-          + Math.sin(Math.PI*t*1 + phase)      * amp    * env
-          + Math.sin(Math.PI*t*2 - phase*1.7)  * amp*.4 * env
-          + Math.sin(Math.PI*t*5 + phase*2.3)  * amp*.12* env;
-        d += ' L' + x.toFixed(1) + ' ' + y.toFixed(2);
-      }
-      path.setAttribute('d', d);
-      raf = requestAnimationFrame(draw);
-    }
-    if(!reduced) draw();
-
-    /* --- ready when the display faces are in (bounded either side) --- */
-    const ready = () => { ov.classList.add('ready'); document.getElementById('ovSound').focus({preventScroll:true}); };
-    const minWait = new Promise(r => setTimeout(r, 700));
-    const fonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-    const maxWait = new Promise(r => setTimeout(r, 2600));
-    Promise.race([Promise.all([fonts, minWait]), maxWait]).then(ready);
-
-    /* --- enter --- */
-    let gone = false;
-    function enter(withSound){
-      if(gone) return; gone = true;
-      if(withSound){ setAudio(true); pluck(0, .9); setTimeout(()=>pluck(7,.5), 140); }
-      target = withSound ? 26 : 10;                 /* one last bow stroke */
-      setTimeout(() => {
-        ov.classList.add('leaving');
-        document.body.classList.remove('overture-open');
-        dispatchEvent(new CustomEvent('locrian:enter'));
-        setTimeout(() => { cancelAnimationFrame(raf); ov.remove(); }, 1300);
-      }, reduced ? 0 : 420);
-    }
-    document.getElementById('ovSound').addEventListener('click', () => enter(true));
-    document.getElementById('ovQuiet').addEventListener('click', () => enter(false));
-    ov.addEventListener('keydown', e => {
-      if(e.key === 'Escape') enter(false);
-      if(e.key === 'Tab'){                          /* two-stop focus trap */
-        const b = [document.getElementById('ovSound'), document.getElementById('ovQuiet')];
-        if(!ov.classList.contains('ready')) return;
-        e.preventDefault();
-        (document.activeElement === b[0] ? b[1] : b[0]).focus();
-      }
-    });
-  })();
 
   /* ================= three.js string field ================= */
   /* A blocked CDN must not take the page down with it — no THREE, no string
@@ -1351,7 +1024,7 @@
       if(prevX!==null&&scrollY<H*.9){
         const speed=Math.abs(wx-prevX);
         strings.forEach((s,i)=>{
-          if((prevX-s.x)*(wx-s.x)<0){ s.amp=Math.min(34,10+speed*.35); s.phase=0; pluck(i,speed/60); }
+          if((prevX-s.x)*(wx-s.x)<0){ s.amp=Math.min(34,10+speed*.35); s.phase=0; }
         });
       }
       prevX=wx;
@@ -1423,21 +1096,8 @@
     document.querySelector('.hint').hidden = true;
   }
 
-  /* repertoire — hover previews the open string; a press plays the work's
-     actual opening, and the row stays lit for as long as it sounds */
-  let litTimer=0;
-  document.querySelectorAll('#repList button').forEach(b=>{
-    const li=b.parentElement;
-    if(canHover) b.addEventListener('mouseenter',()=>{ if(audioOn) pluck(parseInt(b.dataset.note,10),.35); });
-    b.addEventListener('click',()=>{
-      if(!audioOn) setAudio(true);
-      const dur=phrase(b.dataset.phrase)||.9;
-      document.querySelectorAll('#repList .lit').forEach(x=>x.classList.remove('lit'));
-      clearTimeout(litTimer);
-      li.classList.add('lit');
-      litTimer=setTimeout(()=>li.classList.remove('lit'), dur*1000);
-    });
-  });
+  /* repertoire rows are plain links to Spotify now — the pluckline's hover
+     and :active states are pure CSS, no JS needed to light them. */
 
   /* ================= the kindling ================= */
   /* Candle flames for the interlude. Seeded, not Math.random — the room
@@ -1495,15 +1155,9 @@
     if(reduced){
       gsap.set('.reveal',{opacity:1,y:0});
     } else {
-      /* the hero's entrance holds for the overture; if the overlay is not
-         there (noscript rule fired, or it already left) play immediately */
-      const heroIntro = () => {
-        gsap.from('h1 .word > span',{yPercent:110,duration:1.3,ease:'power4.out',stagger:.12,delay:.15});
-        gsap.from('.eyebrow, .hero .of, .hero .lede, .hint',{opacity:0,y:16,duration:1,ease:'power2.out',stagger:.1,delay:.8});
-        gsap.from('.hero-plate img',{scale:1.24,duration:2.6,ease:'power2.out'});
-      };
-      if(document.getElementById('overture')) addEventListener('locrian:enter', heroIntro, {once:true});
-      else heroIntro();
+      gsap.from('h1 .word > span',{yPercent:110,duration:1.3,ease:'power4.out',stagger:.12,delay:.25});
+      gsap.from('.eyebrow, .hero .of, .hero .lede, .hint',{opacity:0,y:16,duration:1,ease:'power2.out',stagger:.1,delay:.9});
+      gsap.from('.hero-plate img',{scale:1.24,duration:2.6,ease:'power2.out'});
       gsap.utils.toArray('.reveal').forEach(el=>{
         gsap.to(el,{opacity:1,y:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
       });

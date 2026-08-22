@@ -60,6 +60,29 @@ Other confirmed recordings, not on the page:
 Apple Music Classical carries the ensemble at
 `classical.music.apple.com/artist/337619505`.
 
+### The repertoire list (Movement II)
+
+None of these six pieces has a verified Locrian Ensemble recording on
+streaming — the repertoire list is characterising the *kind* of programme the
+candlelight series plays, not claiming these specific recordings are theirs.
+Each row links out to Spotify rather than the earlier synthesised audio, so
+the page never plays a note it can't back with a real recording. Five of six
+are the Academy of St Martin in the Fields — the ensemble at the venue the
+whole page is about — under Sir Neville Marriner:
+
+| Row | Recording | Spotify ID |
+|---|---|---|
+| Vivaldi, The Four Seasons | ASMF / Marriner, Alan Loveday (violin) | `5JQuMHOLMDxOaW08PWedES` |
+| Bach, Air 'on the G String' | ASMF / Marriner | `5sO0w5aJCTQSqAQbg2EEVU` |
+| Pachelbel, Canon in D | ASMF / Marriner | `3WB0oOhULy7hhvuy6TC04B` |
+| Handel, Arrival of the Queen of Sheba | ASMF / Marriner | `1PQt1t3Gnzig1K49t1eGgy` |
+| Bach, Brandenburg Concerto No 3 | ASMF / Marriner | `6fVGkeLdlPOKsDnrVDy02O` |
+| Vivaldi, Concerto for Two Cellos | Il Giardino Armonico / Antonini | `21Hol2YEh0KDWsW3SlVnRb` |
+
+No Academy of St Martin in the Fields recording of the Two Cellos concerto
+turned up in the search — Il Giardino Armonico's period-instrument recording
+is the substitute, chosen only for being well-regarded, not for any venue tie.
+
 ---
 
 ## Photography — where the real images are
