@@ -45,7 +45,14 @@
     --safe-r:env(safe-area-inset-right,0px);
   }
   *{margin:0;padding:0;box-sizing:border-box}
+  ::selection{background:var(--velvet);color:var(--ivory)}
+  html{scrollbar-color:rgba(224,164,88,.35) #07060B;scrollbar-width:thin}
+  ::-webkit-scrollbar{width:9px}
+  ::-webkit-scrollbar-track{background:#07060B}
+  ::-webkit-scrollbar-thumb{background:rgba(224,164,88,.3);border-radius:5px;border:2px solid #07060B}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(224,164,88,.5)}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  h1,h2,h3,.mvt-head h2,.coda h2{font-kerning:normal;font-feature-settings:'kern' 1,'liga' 1;text-rendering:optimizeLegibility;text-wrap:balance}
   body{
     background:var(--nave);color:var(--ivory);
     font-family:'Archivo',system-ui,-apple-system,sans-serif;
@@ -72,6 +79,13 @@
   figcaption{position:absolute;left:0;bottom:0;z-index:3;padding:12px 16px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,231,208,.6)}
 
   #stage{position:fixed;inset:0;z-index:1;pointer-events:none}
+  #grain{position:fixed;inset:0;z-index:56;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+  #flamelight{position:fixed;inset:-12%;z-index:55;pointer-events:none;opacity:.6;
+    background:
+      radial-gradient(58% 44% at 50% 46%,rgba(224,164,88,.075) 0%,rgba(224,164,88,.028) 45%,rgba(224,164,88,0) 72%),
+      radial-gradient(120% 100% at 50% 118%,rgba(110,38,52,.05) 0%,rgba(110,38,52,0) 60%);
+    will-change:opacity}
   #stage::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 110%, rgba(224,164,88,.14), transparent 55%)}
   #strings{position:absolute;inset:0;display:block;width:100%;height:100%}
 
@@ -124,6 +138,12 @@
   .mvt-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:clamp(30px,5vh,60px);border-bottom:1px solid var(--hairline);padding-bottom:18px}
   @media(min-width:761px){.mvt-head{gap:22px;padding-bottom:22px}}
   .mvt-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,5vw,30px);color:var(--flame);min-width:2ch}
+  /* the engraved numeral — a ghost of the movement number behind its head */
+  .mvt-head{position:relative}
+  .mvt-head::before{content:attr(data-num);position:absolute;right:-.04em;bottom:-.18em;z-index:-1;
+    font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(110px,22vw,220px);line-height:1;
+    color:transparent;-webkit-text-stroke:1px rgba(224,164,88,.14);pointer-events:none;user-select:none}
+  @supports not (-webkit-text-stroke:1px red){.mvt-head::before{color:rgba(224,164,88,.06)}}
   .mvt-head h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(29px,7.5vw,52px);line-height:1.04}
   .mvt-head .tempo{margin-left:auto;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--smoke);white-space:nowrap}
   @media(max-width:760px){.mvt-head .tempo{display:none}}
@@ -143,11 +163,87 @@
   .fact .k{font-family:'Cormorant Garamond',serif;font-size:clamp(25px,6vw,30px);color:var(--flame);line-height:1.1}
   .fact .v{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--smoke);margin-top:4px}
 
+  /* ===== concert mode ===== */
+  body.concert-open{overflow:hidden}
+  #concert{position:fixed;inset:0;z-index:78;background:#030207}
+  .concert-stage{position:absolute;inset:0}
+  .concert-stage .plate{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease}
+  .concert-stage .plate.on{opacity:1}
+  .concert-stage .plate img{filter:saturate(.42) contrast(1.16) brightness(.5) sepia(.34)}
+  #concert:not(.still) .concert-stage .plate img{animation:kenburns 18s ease-in-out infinite alternate}
+  @keyframes kenburns{from{transform:scale(1.06) translate(0,0)}to{transform:scale(1.14) translate(-1.6%,1.2%)}}
+  .concert-stage::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(75% 60% at 50% 44%,rgba(0,0,0,0) 30%,rgba(3,2,7,.72) 100%)}
+  .concert-cap{position:absolute;left:clamp(18px,5vw,60px);bottom:calc(clamp(70px,12vh,110px) + var(--safe-b));z-index:3;display:grid;gap:4px;max-width:34ch}
+  .concert-cap b{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,5vw,38px);line-height:1.1;color:var(--ivory)}
+  .concert-cap span{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--smoke)}
+  .concert-flames{position:absolute;left:0;right:0;bottom:0;height:90px;z-index:2;pointer-events:none}
+  .concert-ui{position:absolute;right:clamp(14px,3vw,40px);top:calc(clamp(14px,3vh,30px) + var(--safe-t));z-index:4;display:flex;gap:10px}
+  .concert-ui button{all:unset;cursor:pointer;font-family:inherit;min-height:46px;min-width:46px;display:inline-flex;align-items:center;justify-content:center;
+    padding:0 16px;border:1px solid var(--hairline);border-radius:2px;color:var(--ivory);
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;transition:.3s;background:rgba(7,6,11,.5)}
+  .concert-ui button:hover{border-color:var(--flame);color:var(--flame)}
+  .concert-ui button:focus-visible{outline:1px solid var(--flame-bright);outline-offset:3px}
+
+  /* ===== the programme dock ===== */
+  .navlink{all:unset;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--smoke);transition:color .3s}
+  .navlink:hover{color:var(--ivory)}
+  .navlink:focus-visible{outline:1px solid var(--flame);outline-offset:4px}
+  .navlink[aria-expanded="true"]{color:var(--flame)}
+  .sheet-prog{all:unset;cursor:pointer;font-family:inherit;margin-top:26px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--flame)}
+  #prog{position:fixed;right:clamp(10px,2vw,26px);bottom:calc(clamp(10px,2vw,26px) + var(--safe-b));z-index:80;
+    width:min(92vw,340px);background:#0B0912;border:1px solid var(--hairline);border-radius:10px;
+    box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 40px rgba(224,164,88,.05);overflow:hidden}
+  .prog-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--hairline)}
+  .prog-head span{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--flame)}
+  #progClose{all:unset;cursor:pointer;color:var(--smoke);font-size:18px;line-height:1;padding:2px 6px}
+  #progClose:hover{color:var(--ivory)}
+  #progClose:focus-visible{outline:1px solid var(--flame)}
+  .prog-list{display:grid}
+  .prog-list button{all:unset;cursor:pointer;display:grid;gap:2px;padding:12px 16px;border-bottom:1px solid rgba(224,164,88,.08);transition:background .25s}
+  .prog-list button:hover,.prog-list button:focus-visible{background:rgba(224,164,88,.06)}
+  .prog-list button[aria-pressed="true"] .pw{color:var(--flame-bright)}
+  .pw{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ivory);transition:color .3s}
+  .pd{font-size:11px;color:var(--smoke)}
+  .prog-slot{display:grid}
+  .prog-slot iframe{display:block;width:100%;border:0}
+
+  /* ===== the overture ===== */
+  body.overture-open{overflow:hidden}
+  #overture{
+    position:fixed;inset:0;z-index:120;background:var(--nave);
+    display:grid;grid-template-rows:1fr auto auto auto auto 1fr;justify-items:center;align-items:center;
+    padding:0 var(--gut);text-align:center;
+    transition:opacity 1.1s cubic-bezier(.4,0,.2,1),visibility 0s 1.1s;
+  }
+  #overture.leaving{opacity:0;visibility:hidden;pointer-events:none}
+  #ovString{position:relative;grid-row:3;width:100vw;height:110px;margin:2px 0 6px;pointer-events:none}
+  #ovString path{stroke:var(--flame);stroke-width:1.4;opacity:.8}
+  .ov-word{position:relative;z-index:2;display:grid;gap:6px;grid-row:2}
+  .ov-eyebrow{font-size:clamp(11px,2.6vw,13px);letter-spacing:.44em;text-transform:uppercase;color:var(--ivory);padding-left:.44em}
+  .ov-of{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(20px,4.6vw,28px);color:var(--flame)}
+  .ov-tag{position:relative;z-index:2;grid-row:4;margin-top:0;max-width:34ch;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,3.4vw,16.5px);color:var(--smoke);opacity:0;transition:opacity .9s .15s}
+  .ov-enter{position:relative;z-index:2;grid-row:5;display:flex;flex-direction:column;gap:12px;margin-top:26px;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .8s,transform .8s}
+  @media(min-width:521px){.ov-enter{flex-direction:row;gap:16px}}
+  #overture.ready .ov-tag{opacity:1}
+  #overture.ready .ov-enter{opacity:1;transform:none;pointer-events:auto}
+  #overture.ready .ov-tuning{opacity:0}
+  .ov-tuning{position:absolute;left:50%;bottom:calc(34px + var(--safe-b));transform:translateX(-50%);
+    font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--smoke);transition:opacity .5s}
+  .ov-tuning span{animation:ovdot 1.4s infinite}
+  .ov-tuning span:nth-child(2){animation-delay:.2s}
+  .ov-tuning span:nth-child(3){animation-delay:.4s}
+  @keyframes ovdot{0%,60%,100%{opacity:.25}30%{opacity:1}}
+  @media (prefers-reduced-motion: reduce){
+    #overture{transition-duration:.4s}
+    .ov-tuning span{animation:none}
+  }
+
   /* ===== the kindling — scroll lights the church ===== */
   .kindle{position:relative;background:var(--nave)}
   .kindle-pin{position:relative;height:92svh;overflow:hidden;display:grid;place-items:center}
   .kindle-field{position:absolute;inset:0}
-  .kindle-field i{
+  .kindle-field i,.concert-flames i{
     position:absolute;width:5px;height:9px;
     border-radius:50%/62% 62% 38% 38%;
     background:radial-gradient(circle at 50% 32%,#FFE3AE 0%,#E0A458 52%,rgba(224,164,88,0) 78%);
@@ -246,7 +342,8 @@
   .press cite{display:block;margin-top:10px;font-family:'Archivo',sans-serif;font-style:normal;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--flame)}
   .listen-row{display:flex;flex-direction:column;gap:12px;margin-top:clamp(26px,4vh,44px)}
   @media(min-width:521px){.listen-row{flex-direction:row;flex-wrap:wrap;gap:16px}}
-  .btn{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;min-height:52px;padding:0 26px;border-radius:2px;font-weight:600;transition:.3s}
+  .btn{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;min-height:52px;padding:0 26px;border-radius:2px;font-weight:600;transition:.3s;border:0;background:none;font-family:inherit;color:inherit;cursor:pointer}
+  .btn:focus-visible{outline:1px solid var(--flame-bright);outline-offset:3px}
   @media(min-width:521px){.btn{display:inline-flex;min-height:50px}}
   .btn.gold{background:var(--flame);color:var(--nave)}
   .btn.gold:hover{background:var(--flame-bright)}
@@ -258,6 +355,10 @@
   .coda > *{position:relative;z-index:3}
   .coda h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,8.5vw,64px);line-height:1.06;max-width:16ch;margin:0 auto 16px}
   .coda h2 em{font-style:italic;color:var(--flame)}
+  .flourished{position:relative;display:inline-block}
+  .flourish{position:absolute;left:2%;right:0;bottom:-.14em;width:96%;height:.34em;color:var(--flame);opacity:.85}
+  .flourish path{stroke-dasharray:330;stroke-dashoffset:330}
+  @media (prefers-reduced-motion: reduce){.flourish path{stroke-dashoffset:0}}
   .coda p{color:var(--body);max-width:42ch;margin:0 auto 34px;font-size:clamp(15px,3.8vw,17px)}
   .coda .listen-row{align-items:stretch}
   @media(min-width:521px){.coda .listen-row{justify-content:center}}
@@ -285,6 +386,37 @@
   .diary a:focus-visible{outline:1px solid var(--flame);outline-offset:-2px}
   @media(hover:hover){.diary a:hover .what{color:var(--flame-bright)}}
 
+  /* ===== the dark minute ===== */
+  .dark{position:relative;min-height:78svh;display:grid;place-items:center;
+    padding:clamp(90px,16vh,180px) var(--gut);background:#040308;overflow:hidden}
+  .dark-text{position:relative;z-index:2;max-width:30ch;text-align:center;
+    font-family:'Cormorant Garamond',serif;font-weight:500;
+    font-size:clamp(22px,5.4vw,36px);line-height:1.5;color:var(--ivory)}
+  .dark-text em{font-style:italic;color:var(--flame)}
+  .dark-glow{position:absolute;z-index:1;left:0;top:0;width:340px;height:340px;
+    margin:-170px 0 0 -170px;pointer-events:none;opacity:0;
+    background:radial-gradient(circle,rgba(224,164,88,.16) 0%,rgba(224,164,88,.05) 42%,rgba(224,164,88,0) 70%);
+    transform:translate(-999px,-999px)}
+  /* JS arms the veil: text faint everywhere except inside the carried light */
+  .dark.lit-by-hand .dark-text{
+    -webkit-mask-image:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%),#000 0%,rgba(0,0,0,.92) 45%,rgba(0,0,0,.07) 78%);
+    mask-image:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%),#000 0%,rgba(0,0,0,.92) 45%,rgba(0,0,0,.07) 78%);
+  }
+  .dark.lit-by-hand .dark-glow{opacity:1}
+  @media (prefers-reduced-motion: reduce){
+    .dark.lit-by-hand .dark-text{-webkit-mask-image:none;mask-image:none}
+    .dark.lit-by-hand .dark-glow{opacity:0}
+  }
+
+  /* ===== the snuffing ===== */
+  .snuff{display:grid;justify-items:center;gap:18px;margin:clamp(6px,2vh,20px) 0 clamp(30px,6vh,58px)}
+  .snuff svg{overflow:visible}
+  .sn-flame,.sn-glow{transform-origin:60px 76px}
+  .sn-smoke{stroke-dasharray:90;stroke-dashoffset:90;opacity:0;transform-origin:60px 78px}
+  .sn-line{position:static;padding:0;font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:0;text-transform:none;
+    font-size:clamp(16px,4vw,21px);color:var(--smoke);text-align:center}
+  .sn-line em{color:var(--ivory)}
+
   .reveal{opacity:0;transform:translateY(28px)}
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
@@ -294,9 +426,36 @@
   }
 </style>
 </head>
-<body>
+<body class="overture-open">
+
+<!-- ================= the overture =================
+     The page opens the way the concert does: dark, one string, and a choice.
+     The string hums while the room readies; the buttons appear when the fonts
+     are in. "Enter with sound" is the audio unlock for everything after it.
+     Without JavaScript the overlay never shows (see the noscript rule). -->
+<div id="overture" role="dialog" aria-modal="true" aria-label="The Locrian Ensemble of London — enter with or without sound">
+  <svg id="ovString" viewBox="0 0 1000 160" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 80 L1000 80" fill="none"/>
+  </svg>
+  <div class="ov-word">
+    <span class="ov-eyebrow">The Locrian Ensemble</span>
+    <em class="ov-of">of London</em>
+  </div>
+  <p class="ov-tag">One string field, tuned to the mode that bears the name.</p>
+  <div class="ov-enter">
+    <button class="btn gold" id="ovSound" type="button">Enter with sound</button>
+    <button class="btn ghost" id="ovQuiet" type="button">Enter quietly</button>
+  </div>
+  <p class="ov-tuning" aria-hidden="true">tuning<span>.</span><span>.</span><span>.</span></p>
+</div>
+<noscript><style>#overture{display:none}</style></noscript>
 
 <div id="stage" aria-hidden="true"><canvas id="strings"></canvas></div>
+
+<!-- the candle's veil: one warm bloom over the whole room, breathing on the
+     flame clock. Pure opacity per frame — compositor only. -->
+<div id="flamelight" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
 
 <header id="topbar">
   <a class="wordmark" href="#top">Locrian<span>.</span></a>
@@ -304,6 +463,8 @@
     <a href="#ensemble">Ensemble</a>
     <a href="#candlelight">Candlelight</a>
     <a href="#screen">On Screen</a>
+    <button class="navlink" id="progBtn" type="button" aria-expanded="false" aria-controls="prog">Programme</button>
+    <button class="navlink" id="lightsBtn" type="button" aria-pressed="false">Lights down</button>
     <a class="book" href="#concerts">Concerts</a>
   </nav>
   <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="sheet" aria-label="Open menu"><i></i><i></i></button>
@@ -317,6 +478,8 @@
     <a href="#screen"><span class="n">IV</span>On Screen</a>
     <a href="#concerts"><span class="n">Book</span>Concerts</a>
   </nav>
+  <button class="sheet-prog" id="progBtnM" type="button">♪ The programme — listen while you read</button>
+  <button class="sheet-prog" id="lightsBtnM" type="button">☾ Lights down — the room by candlelight</button>
   <p class="foot">St Martin-in-the-Fields · London</p>
 </div>
 
@@ -344,7 +507,7 @@
 
   <section class="movement" id="ensemble">
     <div class="inner">
-      <div class="mvt-head reveal"><span class="mvt-num">I.</span><h2>The Ensemble</h2><span class="tempo">Andante — with warmth</span></div>
+      <div class="mvt-head reveal" data-num="I"><span class="mvt-num">I.</span><h2>The Ensemble</h2><span class="tempo">Andante — with warmth</span></div>
       <div class="cols">
         <div class="reveal">
           <p><strong>Formed by cellist Justin Pearson</strong>, the Locrian Ensemble of London draws together some of the capital's most prominent string soloists — players whose individual flair shapes every performance of the great chamber and orchestral repertoire.</p>
@@ -399,22 +562,22 @@
         srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/960px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png/1280px-Interior_of_a_Gothic_Church_by_Candlelight_%28SM_503%29.png 1280w" alt="">
     </figure>
     <div class="inner">
-      <div class="mvt-head reveal"><span class="mvt-num">II.</span><h2>By Candlelight</h2><span class="tempo">Allegro — by flame</span></div>
+      <div class="mvt-head reveal" data-num="II"><span class="mvt-num">II.</span><h2>By Candlelight</h2><span class="tempo">Allegro — by flame</span></div>
       <ul class="rep reveal" id="repList">
-        <li><button data-note="0"><span class="composer">Vivaldi</span><span class="work">The Four Seasons</span><span class="note">the signature evening</span></button><span class="pluckline"></span></li>
-        <li><button data-note="2"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Air 'on the G String'</span><span class="note">by candlelight</span></button><span class="pluckline"></span></li>
-        <li><button data-note="4"><span class="composer">Pachelbel</span><span class="work">Canon in D</span><span class="note">an audience favourite</span></button><span class="pluckline"></span></li>
-        <li><button data-note="5"><span class="composer">Handel</span><span class="work">Arrival of the Queen of Sheba</span><span class="note">a bright opening</span></button><span class="pluckline"></span></li>
-        <li><button data-note="7"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Brandenburg Concerto No 3</span><span class="note">strings at full sail</span></button><span class="pluckline"></span></li>
-        <li><button data-note="9"><span class="composer">Vivaldi</span><span class="work">Concerto for Two Cellos</span><span class="note">Justin's own territory</span></button><span class="pluckline"></span></li>
+        <li><button data-note="0" data-phrase="seasons"><span class="composer">Vivaldi</span><span class="work">The Four Seasons</span><span class="note">the signature evening</span></button><span class="pluckline"></span></li>
+        <li><button data-note="2" data-phrase="air"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Air 'on the G String'</span><span class="note">by candlelight</span></button><span class="pluckline"></span></li>
+        <li><button data-note="4" data-phrase="canon"><span class="composer">Pachelbel</span><span class="work">Canon in D</span><span class="note">an audience favourite</span></button><span class="pluckline"></span></li>
+        <li><button data-note="5" data-phrase="sheba"><span class="composer">Handel</span><span class="work">Arrival of the Queen of Sheba</span><span class="note">a bright opening</span></button><span class="pluckline"></span></li>
+        <li><button data-note="7" data-phrase="brandenburg"><span class="composer">J.&nbsp;S.&nbsp;Bach</span><span class="work">Brandenburg Concerto No 3</span><span class="note">strings at full sail</span></button><span class="pluckline"></span></li>
+        <li><button data-note="9" data-phrase="twocellos"><span class="composer">Vivaldi</span><span class="work">Concerto for Two Cellos</span><span class="note">Justin's own territory</span></button><span class="pluckline"></span></li>
       </ul>
-      <p class="rep-hint" id="repHint">Touch a work to hear its open string.</p>
+      <p class="rep-hint" id="repHint">Press a work to hear its opening bars.</p>
     </div>
   </section>
 
   <section class="gallery-wrap" id="gallery">
     <div class="gallery-head inner">
-      <div class="mvt-head reveal"><span class="mvt-num">III.</span><h2>The Room</h2><span class="tempo">Scroll — the hall passes</span></div>
+      <div class="mvt-head reveal" data-num="III"><span class="mvt-num">III.</span><h2>The Room</h2><span class="tempo">Scroll — the hall passes</span></div>
     </div>
     <div class="track" id="track">
       <figure class="frame tall">
@@ -441,9 +604,47 @@
     <p class="swipe-hint">Swipe through the hall →</p>
   </section>
 
+  <!-- Interlude — the dark minute. On a fine pointer you carry the light
+       yourself; on touch the flame is carried for you, drifting across the
+       words. Without JavaScript (or with reduced motion) the text simply
+       reads, plainly lit. -->
+  <section class="dark" id="veiled" aria-label="An interlude in the dark">
+    <div class="dark-glow" aria-hidden="true"></div>
+    <p class="dark-text">There is a minute before every concert when the house is
+      dark and the hall belongs to no one. The players wait. The flames breathe.
+      <em>Carry a light through, and take your seat.</em></p>
+  </section>
+
   <section class="movement" id="screen">
     <div class="inner">
-      <div class="mvt-head reveal"><span class="mvt-num">IV.</span><h2>On Screen</h2><span class="tempo">Maestoso — for Cromwell</span></div>
+      <div class="mvt-head reveal" data-num="IV"><span class="mvt-num">IV.</span><h2>On Screen</h2><span class="tempo">Maestoso — for Cromwell</span></div>
+
+      <!-- The snuffing — Wolf Hall's own image. One candle between the head
+           and the cards; scrolling gutters it, then puts it out, and a curl
+           of smoke rises where the flame stood. Scrubbed by GSAP; without it
+           the candle simply stands lit. -->
+      <figure class="snuff" aria-hidden="true">
+        <svg viewBox="0 0 120 200" width="100" height="167">
+          <defs>
+            <radialGradient id="snGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stop-color="#E0A458" stop-opacity=".5"/>
+              <stop offset="1" stop-color="#E0A458" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="snFlame" cx="50%" cy="65%" r="60%">
+              <stop offset="0" stop-color="#FFE3AE"/>
+              <stop offset=".55" stop-color="#E0A458"/>
+              <stop offset="1" stop-color="#E0A458" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle class="sn-glow" cx="60" cy="66" r="52" fill="url(#snGlow)"/>
+          <path class="sn-flame" d="M60 34 C 52 52 50 62 54 74 C 56 81 64 81 66 74 C 70 62 68 52 60 34 Z" fill="url(#snFlame)"/>
+          <path class="sn-smoke" d="M60 78 C 58 66 64 58 59 46 C 55 37 63 30 60 20" fill="none" stroke="#8E87A0" stroke-width="1.6" stroke-linecap="round"/>
+          <rect x="56.6" y="78" width="6.8" height="10" rx="2.4" fill="#584a68"/>
+          <rect x="42" y="86" width="36" height="76" rx="4" fill="#332941" stroke="rgba(224,164,88,.3)" stroke-width=".8"/>
+          <rect x="42" y="86" width="36" height="8" rx="4" fill="#453955"/>
+        </svg>
+        <figcaption class="sn-line">The story is told <em>as the light goes out.</em></figcaption>
+      </figure>
       <div class="screen-grid">
         <article class="card reveal">
           <figure class="plate"><img data-slot="screen-1" loading="lazy" decoding="async" sizes="(max-width:760px) 100vw, 46vw" src="https://upload.wikimedia.org/wikipedia/commons/9/92/The_Great_Hall%2C_Hampton_Court_Palace%2C_Surrey_-_geograph.org.uk_-_2510515.jpg" alt="Tudor stained glass in the Great Hall at Hampton Court Palace"></figure>
@@ -493,7 +694,8 @@
     <figure class="plate vignette" data-par="0.26" aria-hidden="true">
       <img data-slot="coda" loading="lazy" decoding="async" sizes="100vw" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg" srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/960px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg/1280px-St_Martin-in-the-Fields_at_night%2C_Trafalgar_Square%2C_London_-_geograph.org.uk_-_1867030.jpg 1280w" alt="">
     </figure>
-    <h2 class="reveal">Music, as it sounds <em>by candlelight.</em></h2>
+    <h2 class="reveal">Music, as it sounds <em class="flourished">by candlelight.
+      <svg class="flourish" viewBox="0 0 300 22" aria-hidden="true" preserveAspectRatio="none"><path d="M4 14 C 60 4 120 20 165 12 C 220 3 262 12 296 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></em></h2>
     <p class="reveal">The candlelight series continues at St Martin-in-the-Fields, with theatre concerts and festival appearances across Britain. Join us in the glow.</p>
     <!-- Populated from the CONCERTS array at the top of the script below.
          Empty array -> stays hidden and the diary link carries the section. -->
@@ -505,6 +707,46 @@
   </section>
 
 </main>
+
+<!-- ================= concert mode =================
+     Lights down. The page dims to the room itself: the gallery's images,
+     one at a time and full screen under the candlelight grade, a line of
+     guttering flames at the foot, the programme dock alongside for sound.
+     Slides are built from the gallery markup, so new photography joins
+     concert mode with no extra work. -->
+<div id="concert" hidden role="dialog" aria-modal="true" aria-label="Concert mode — the room by candlelight">
+  <div class="concert-stage"></div>
+  <p class="concert-cap"><b></b><span></span></p>
+  <div class="concert-flames" aria-hidden="true"></div>
+  <div class="concert-ui">
+    <button id="ccPrev" type="button" aria-label="Previous image">&#8592;</button>
+    <button id="ccNext" type="button" aria-label="Next image">&#8594;</button>
+    <button id="ccClose" type="button">Lights up</button>
+  </div>
+</div>
+
+<!-- ================= the programme dock =================
+     The ensemble's recordings, streamed by Spotify while you browse.
+     Nothing loads until a recording is chosen; the frame only ever plays
+     what the listener pressed play on. IDs verified in MEDIA.md. -->
+<aside id="prog" hidden aria-label="The programme — recordings by the ensemble">
+  <div class="prog-head">
+    <span>The programme</span>
+    <button id="progClose" type="button" aria-label="Close the programme">&#215;</button>
+  </div>
+  <div class="prog-list" role="list">
+    <button type="button" data-embed="album/1EzC0f0vGFJLSECKWg38CG" data-h="152">
+      <span class="pw">Wolf Hall</span><span class="pd">The 2015 score — No.&thinsp;1 on the classical chart</span>
+    </button>
+    <button type="button" data-embed="track/5Nknri9YPCoKuvj50DSbYw" data-h="152">
+      <span class="pw">The Mirror and the Light</span><span class="pd">Cromwell's inner voice, 2024</span>
+    </button>
+    <button type="button" data-embed="track/1e9CHrtOPK9KvwCMx23VBc" data-h="152">
+      <span class="pw">The Unicorn's Horn</span><span class="pd">A single piece, if you have a minute</span>
+    </button>
+  </div>
+  <div class="prog-slot"></div>
+</aside>
 
 <footer>
   <span>The Locrian Ensemble of London</span>
@@ -607,6 +849,14 @@
       actx=new AC(); master=actx.createGain(); master.gain.value=.5;
       const lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3400;
       master.connect(lp); lp.connect(actx.destination);
+      /* the room: a short feedback delay as a light shared reverb, so plucks,
+         phrases and the bed all sound in the same hall */
+      const dly=actx.createDelay(.5); dly.delayTime.value=.11;
+      const fb=actx.createGain(); fb.gain.value=.3;
+      const damp=actx.createBiquadFilter(); damp.type='lowpass'; damp.frequency.value=1500;
+      const wet=actx.createGain(); wet.gain.value=.16;
+      lp.connect(dly); dly.connect(damp); damp.connect(fb); fb.connect(dly);
+      damp.connect(wet); wet.connect(actx.destination);
     }
     if(actx.state==='suspended') actx.resume();
   }
@@ -614,6 +864,7 @@
     audioOn=on; if(on) ensureCtx();
     toggle.setAttribute('aria-pressed',on?'true':'false');
     toggle.textContent=on?'Sound on':'Sound off';
+    updateBed();
   }
   toggle.addEventListener('click',()=>setAudio(!audioOn));
   /* On a mouse, the first click anywhere can safely unlock audio.
@@ -637,11 +888,408 @@
     o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
     o1.start(now); o2.start(now); o1.stop(now+2); o2.stop(now+2);
   }
+  /* ================= concert mode ================= */
+  (function concertMode(){
+    const room = document.getElementById('concert');
+    if(!room) return;
+    const stage = room.querySelector('.concert-stage');
+    const capB = room.querySelector('.concert-cap b');
+    const capS = room.querySelector('.concert-cap span');
+    const btns = [document.getElementById('lightsBtn'), document.getElementById('lightsBtnM')].filter(Boolean);
+    let built=false, idx=0, timer=0, slides=[];
+    if(reduced) room.classList.add('still');
+    function build(){
+      built=true;
+      document.querySelectorAll('#track .frame').forEach(f=>{
+        const img=f.querySelector('img'), cap=f.querySelector('.cap');
+        const fig=document.createElement('figure'); fig.className='plate';
+        const im=document.createElement('img');
+        im.src=img.currentSrc||img.src;
+        if(img.srcset) im.srcset=img.srcset;
+        im.sizes='100vw'; im.alt=''; im.loading='lazy'; im.decoding='async';
+        fig.appendChild(im); stage.appendChild(fig);
+        slides.push({fig, b:cap?cap.childNodes[0].textContent:'', s:cap?cap.childNodes[1].textContent:''});
+      });
+      /* a low rank of flames along the foot of the room */
+      const fl=room.querySelector('.concert-flames');
+      let seed=23;
+      const rnd=()=> (seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff;
+      for(let i=0;i<16;i++){
+        const f=document.createElement('i');
+        f.style.left=(2+rnd()*96).toFixed(2)+'%';
+        f.style.top=(30+rnd()*52).toFixed(2)+'%';
+        f.style.setProperty('--s',(0.9+rnd()*1.3).toFixed(2));
+        f.style.setProperty('--d',(-rnd()*3).toFixed(2)+'s');
+        fl.appendChild(f);
+      }
+    }
+    function show(i){
+      idx=(i+slides.length)%slides.length;
+      slides.forEach((sl,k)=>sl.fig.classList.toggle('on',k===idx));
+      capB.textContent=slides[idx].b; capS.textContent=slides[idx].s;
+    }
+    function arm(){ clearInterval(timer); if(!reduced) timer=setInterval(()=>show(idx+1), 8000); }
+    function setOpen(open){
+      if(open && !built) build();
+      room.hidden=!open;
+      document.body.classList.toggle('concert-open', open);
+      btns.forEach(b=>b.setAttribute('aria-pressed', open?'true':'false'));
+      if(open){
+        show(idx); arm();
+        document.getElementById('ccClose').focus({preventScroll:true});
+        /* the dock plays on over the dark — offer it if it isn't already out */
+        const dock=document.getElementById('prog');
+        if(dock && dock.hidden){ dock.hidden=false; }
+      } else { clearInterval(timer); }
+    }
+    btns.forEach(b=>b.addEventListener('click',()=>setOpen(room.hidden)));
+    document.getElementById('ccClose').addEventListener('click',()=>setOpen(false));
+    document.getElementById('ccPrev').addEventListener('click',()=>{show(idx-1);arm();});
+    document.getElementById('ccNext').addEventListener('click',()=>{show(idx+1);arm();});
+    addEventListener('keydown',e=>{
+      if(room.hidden) return;
+      if(e.key==='Escape') setOpen(false);
+      if(e.key==='ArrowLeft'){show(idx-1);arm();}
+      if(e.key==='ArrowRight'){show(idx+1);arm();}
+    });
+  })();
+
+  /* ================= the programme dock ================= */
+  (function programme(){
+    const dock = document.getElementById('prog');
+    if(!dock) return;
+    const btn = document.getElementById('progBtn');
+    const btnM = document.getElementById('progBtnM');
+    const slot = dock.querySelector('.prog-slot');
+    const items = dock.querySelectorAll('.prog-list button');
+    function setOpen(open){
+      dock.hidden = !open;
+      btn && btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(open) (dock.querySelector('[aria-pressed="true"]') || items[0]).focus();
+    }
+    btn && btn.addEventListener('click', () => setOpen(dock.hidden));
+    btnM && btnM.addEventListener('click', () => { setOpen(true); });
+    document.getElementById('progClose').addEventListener('click', () => { setOpen(false); btn && btn.focus(); });
+    addEventListener('keydown', e => { if(e.key === 'Escape' && !dock.hidden) setOpen(false); });
+    items.forEach(b => b.addEventListener('click', () => {
+      items.forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+      const f = document.createElement('iframe');
+      f.src = 'https://open.spotify.com/embed/' + b.dataset.embed + '?theme=0';
+      f.height = +b.dataset.h || 152;
+      f.title = b.querySelector('.pw').textContent + ' on Spotify';
+      f.allow = 'encrypted-media; clipboard-write; fullscreen; picture-in-picture';
+      f.loading = 'lazy';
+      slot.replaceChildren(f);
+    }));
+  })();
+
+  /* ================= the dark minute ================= */
+  (function darkMinute(){
+    const sec = document.getElementById('veiled');
+    if(!sec || reduced) return;                       /* reduced: plainly lit */
+    const glow = sec.querySelector('.dark-glow');
+    const text = sec.querySelector('.dark-text');
+    sec.classList.add('lit-by-hand');
+    let tx=-999, ty=-999, x=-999, y=-999, drift=!canHover, t0=Math.random()*7;
+    if(canHover){
+      sec.addEventListener('pointermove', e => {
+        const r = sec.getBoundingClientRect();
+        tx = e.clientX - r.left; ty = e.clientY - r.top;
+      });
+      sec.addEventListener('pointerleave', () => { tx = -999; ty = -999; });
+    }
+    let raf=0;
+    function tick(){
+      raf = requestAnimationFrame(tick);
+      if(drift){
+        /* the flame is carried for you: a slow figure over the words */
+        t0 += .004;
+        const r = sec.getBoundingClientRect();
+        const tr = text.getBoundingClientRect();
+        const cx = tr.left - r.left + tr.width/2, cy = tr.top - r.top + tr.height/2;
+        tx = cx + Math.sin(t0*1.7) * tr.width * .42;
+        ty = cy + Math.sin(t0*2.3 + 1.2) * tr.height * .5;
+      }
+      /* carried, not glued: the light lags the hand like a real flame */
+      x += (tx - x) * .09; y += (ty - y) * .09;
+      /* mask coords live in the text's own box, not the section's */
+      const sr = sec.getBoundingClientRect(), tb = text.getBoundingClientRect();
+      sec.style.setProperty('--mx', (x - (tb.left - sr.left)).toFixed(1) + 'px');
+      sec.style.setProperty('--my', (y - (tb.top - sr.top)).toFixed(1) + 'px');
+      glow.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + (.9 + .2*(window.__flame||.8)).toFixed(3) + ')';
+    }
+    /* run only while the section is near the viewport */
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(es => {
+        es.forEach(e => {
+          if(e.isIntersecting && !raf) tick();
+          else if(!e.isIntersecting && raf){ cancelAnimationFrame(raf); raf = 0; }
+        });
+      }, {rootMargin:'80px'}).observe(sec);
+    } else tick();
+  })();
+
+  /* ================= the flame clock ================= */
+  /* One flame lights the whole page. Everything that glows — the veil over
+     the photographs, the embers, the strings, the kindle field — breathes
+     against this single clock, so the room reads as lit by one real candle
+     rather than a set of independent CSS loops. */
+  window.__flame = .8;
+  (function flameClock(){
+    const veil = document.getElementById('flamelight');
+    const kindleField = document.getElementById('kindleField');
+    if(reduced){ if(veil) veil.style.opacity = .5; return; }
+    let t = Math.random()*100;
+    (function tick(){
+      requestAnimationFrame(tick);
+      t += .016;
+      const k = .72
+        + .16*Math.sin(6.2832*.23*t)
+        + .08*Math.sin(6.2832*.57*t + 1.3)
+        + .05*Math.sin(6.2832*1.31*t + 4.1);
+      window.__flame = k;
+      if(veil) veil.style.opacity = (.28 + .5*k).toFixed(3);
+      if(kindleField) kindleField.style.opacity = (.72 + .28*k).toFixed(3);
+    })();
+  })();
+
+  /* ================= voices & phrases ================= */
+  /* Each repertoire row plays its actual opening — a couple of bars,
+     synthesised from the public-domain score. No files, no licences. */
+  const SEMI={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+  function freqOf(name){
+    const m=/^([A-G])([#b]?)(\d)$/.exec(name);
+    return 440*Math.pow(2,(SEMI[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)+(+m[3]+1)*12-69)/12);
+  }
+  function panFor(f){ return Math.max(-.4,Math.min(.4,Math.log2(f/247)*.22)); }
+  function route(g,f){
+    if(actx.createStereoPanner){ const p=actx.createStereoPanner(); p.pan.value=panFor(f); g.connect(p); return p; }
+    return g;
+  }
+  /* a bowed string: detuned saw pair, vibrato, lowpass, soft envelope */
+  function bow(f,when,dur,bus,lvl){
+    lvl=lvl||.06;
+    const g=actx.createGain();
+    g.gain.setValueAtTime(.0001,when);
+    g.gain.linearRampToValueAtTime(lvl,when+.055);
+    g.gain.setValueAtTime(lvl,Math.max(when+.055,when+dur-.09));
+    g.gain.exponentialRampToValueAtTime(.0001,when+dur+.22);
+    const flt=actx.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=2400;
+    const o1=actx.createOscillator(); o1.type='sawtooth'; o1.frequency.value=f; o1.detune.value=-4;
+    const o2=actx.createOscillator(); o2.type='sawtooth'; o2.frequency.value=f; o2.detune.value=5;
+    const vib=actx.createOscillator(); vib.frequency.value=5.1;
+    const vg=actx.createGain(); vg.gain.value=f*.005;
+    vib.connect(vg); vg.connect(o1.frequency); vg.connect(o2.frequency);
+    o1.connect(flt); o2.connect(flt); flt.connect(g);
+    route(g,f).connect(bus);
+    [o1,o2,vib].forEach(o=>{o.start(when);o.stop(when+dur+.3);});
+  }
+  /* a cello-ish bass: triangle + sub, darker filter */
+  function bassv(f,when,dur,bus,lvl){
+    lvl=lvl||.09;
+    const g=actx.createGain();
+    g.gain.setValueAtTime(.0001,when);
+    g.gain.linearRampToValueAtTime(lvl,when+.04);
+    g.gain.setValueAtTime(lvl,Math.max(when+.04,when+dur-.08));
+    g.gain.exponentialRampToValueAtTime(.0001,when+dur+.18);
+    const flt=actx.createBiquadFilter(); flt.type='lowpass'; flt.frequency.value=850;
+    const o1=actx.createOscillator(); o1.type='triangle'; o1.frequency.value=f;
+    const o2=actx.createOscillator(); o2.type='sine'; o2.frequency.value=f/2;
+    const g2=actx.createGain(); g2.gain.value=.5;
+    o1.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g);
+    route(g,f).connect(bus);
+    [o1,o2].forEach(o=>{o.start(when);o.stop(when+dur+.25);});
+  }
+  /* [note, startBeat, beats, voice] — 'b' routes to the bass voice */
+  const PHRASES={
+    seasons:{bpm:104,notes:[['E4',0,.5],['G#4',.5,.5],['G#4',1,.5],['G#4',1.5,.5],['F#4',2,.5],['E4',2.5,.5],['B4',3,1.4],['B4',4.5,.5],['A4',5,.5],['G#4',5.5,.5],['F#4',6,1.2]]},
+    air:{bpm:56,notes:[['F#5',0,3],['E5',3,.75],['D5',3.75,.75],['C#5',4.5,1.5],
+      ['D3',0,1,'b'],['C#3',1,1,'b'],['B2',2,1,'b'],['A2',3,1,'b'],['G2',4,1,'b'],['A2',5,1,'b']]},
+    canon:{bpm:60,notes:[['D3',0,1,'b'],['A2',1,1,'b'],['B2',2,1,'b'],['F#2',3,1,'b'],['G2',4,1,'b'],['D2',5,1,'b'],['G2',6,1,'b'],['A2',7,1,'b'],
+      ['F#5',4,1],['E5',5,1],['D5',6,1],['C#5',7,1]]},
+    sheba:{bpm:126,notes:[['F5',0,.25],['D5',.25,.25],['F5',.5,.25],['D5',.75,.25],['Eb5',1,.25],['C5',1.25,.25],['D5',1.5,.25],['Bb4',1.75,.25],['C5',2,.25],['A4',2.25,.25],['Bb4',2.5,1]]},
+    brandenburg:{bpm:108,notes:[['G4',0,.5],['F#4',.5,.25],['G4',.75,.25],['D4',1,.5],['B3',1.5,.25],['C4',1.75,.25],['D4',2,.5],['G3',2.5,.5],['G4',3,1],
+      ['G2',0,1,'b'],['G2',1,1,'b'],['G2',2,1,'b'],['G2',3,1,'b']]},
+    twocellos:{bpm:96,notes:[['G3',0,.5],['G3',.5,.25],['G3',.75,.25],['Bb3',1,.5],['A3',1.5,.25],['G3',1.75,.25],['F#3',2,.5],['G3',2.5,1.4],
+      ['G2',0,1,'b'],['C3',1,1,'b'],['D3',2,1,'b'],['G2',3,1.4,'b']]}
+  };
+  let phraseBus=null;
+  function stopPhrase(){
+    if(!phraseBus) return;
+    const old=phraseBus, now=actx.currentTime;
+    old.gain.cancelScheduledValues(now);
+    old.gain.setValueAtTime(old.gain.value,now);
+    old.gain.linearRampToValueAtTime(0,now+.12);
+    setTimeout(()=>old.disconnect(),250);
+    phraseBus=null;
+  }
+  function phrase(key){
+    if(!audioOn) return 0;
+    ensureCtx(); stopPhrase();
+    const p=PHRASES[key]; if(!p) return 0;
+    phraseBus=actx.createGain(); phraseBus.gain.value=1; phraseBus.connect(master);
+    const spb=60/p.bpm, t0=actx.currentTime+.04;
+    let end=0;
+    for(const [n,st,d,v] of p.notes){
+      (v==='b'?bassv:bow)(freqOf(n), t0+st*spb, d*spb, phraseBus);
+      end=Math.max(end,(st+d)*spb);
+    }
+    return end+.3;
+  }
+
+  /* ================= the ambient bed ================= */
+  /* Once sound is on: the hall's low hum on B, a candle's crackle, and a
+     quiet inner voice that climbs the Locrian scale as you move through
+     the movements — the whole page slowly plays the mode. */
+  let bed=null;
+  function buildBed(){
+    const out=actx.createGain(); out.gain.value=0; out.connect(master);
+    /* drone: B2 + D3 + B3, breathing at a candle's pace */
+    const breath=actx.createGain(); breath.gain.value=.8; breath.connect(out);
+    [[123.47,'sine',.030],[146.83,'sine',.017],[246.94,'triangle',.011]].forEach(([f,ty,lvl])=>{
+      const o=actx.createOscillator(); o.type=ty; o.frequency.value=f;
+      const g=actx.createGain(); g.gain.value=lvl;
+      o.connect(g); g.connect(breath); o.start();
+    });
+    const lfo=actx.createOscillator(); lfo.frequency.value=.07;
+    const lg=actx.createGain(); lg.gain.value=.22;
+    lfo.connect(lg); lg.connect(breath.gain); lfo.start();
+    /* the inner voice — retuned by scroll */
+    const deg=actx.createOscillator(); deg.type='triangle'; deg.frequency.value=246.94;
+    const degG=actx.createGain(); degG.gain.value=.014;
+    const degF=actx.createBiquadFilter(); degF.type='lowpass'; degF.frequency.value=1100;
+    deg.connect(degF); degF.connect(degG); degG.connect(out); deg.start();
+    /* candle crackle: sparse filtered noise grains */
+    const nbuf=actx.createBuffer(1,actx.sampleRate/2,actx.sampleRate);
+    const nd=nbuf.getChannelData(0);
+    for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+    bed={out,deg,degG,nbuf,running:false,timer:0};
+    (function crackle(){
+      bed.timer=setTimeout(crackle,220+Math.random()*1500);
+      if(!bed.running||!audioOn) return;
+      const t=actx.currentTime;
+      const src=actx.createBufferSource(); src.buffer=bed.nbuf;
+      const bp=actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2300+Math.random()*2200; bp.Q.value=8;
+      const g=actx.createGain();
+      const lvl=.006+Math.random()*.012, dur=.02+Math.random()*.06;
+      g.gain.setValueAtTime(lvl,t);
+      g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      src.connect(bp); bp.connect(g); g.connect(bed.out);
+      src.start(t,Math.random()*.4,dur+.02);
+    })();
+  }
+  function updateBed(){
+    if(audioOn){
+      if(!bed) buildBed();
+      const now=actx.currentTime;
+      bed.running=true;
+      bed.out.gain.cancelScheduledValues(now);
+      bed.out.gain.setValueAtTime(bed.out.gain.value,now);
+      bed.out.gain.linearRampToValueAtTime(1,now+2.5);
+    } else if(bed){
+      const now=actx.currentTime;
+      bed.running=false;
+      bed.out.gain.cancelScheduledValues(now);
+      bed.out.gain.setValueAtTime(bed.out.gain.value,now);
+      bed.out.gain.linearRampToValueAtTime(0,now+.7);
+    }
+  }
+  /* scroll → scale degree. B, then upward through the mode, one landmark
+     per movement; the candlelight movement gets F natural — the diminished
+     fifth that makes Locrian Locrian. */
+  (function degreeByScroll(){
+    const stops=[['#top',246.94],['#ensemble',293.66],['.kindle',329.63],['#candlelight',349.23],['#gallery',392.00],['#screen',440.00],['#concerts',493.88]];
+    let cur=0, tick=0;
+    addEventListener('scroll',()=>{
+      if(tick) return;
+      tick=setTimeout(()=>{
+        tick=0;
+        if(!bed||!bed.running) return;
+        const mid=scrollY+innerHeight*.5;
+        let best=0;
+        for(let i=0;i<stops.length;i++){
+          const el=document.querySelector(stops[i][0]);
+          if(el && el.getBoundingClientRect().top+scrollY < mid) best=i;
+        }
+        if(best!==cur){
+          cur=best;
+          const now=actx.currentTime;
+          bed.deg.frequency.cancelScheduledValues(now);
+          bed.deg.frequency.setValueAtTime(bed.deg.frequency.value,now);
+          bed.deg.frequency.exponentialRampToValueAtTime(stops[best][1],now+1.4);
+          bed.degG.gain.cancelScheduledValues(now);
+          bed.degG.gain.setValueAtTime(.028,now);
+          bed.degG.gain.linearRampToValueAtTime(.014,now+2);
+        }
+      },200);
+    },{passive:true});
+  })();
+
   /* copy that matches the input device */
   if(!canHover){
     document.getElementById('hintText').textContent='Drag a finger across the strings — tuned to the Locrian mode.';
-    document.getElementById('repHint').textContent='Tap a work to hear its open string.';
+    document.getElementById('repHint').textContent='Tap a work to hear its opening bars.';
   }
+
+  /* ================= the overture ================= */
+  (function overture(){
+    const ov = document.getElementById('overture');
+    if(!ov) return;
+    const path = ov.querySelector('#ovString path');
+
+    /* --- the string: a plucked standing wave, drawn at ~60 points --- */
+    let amp = 0, target = 2.2, phase = 0, raf = 0;
+    const PTS = 64;
+    function draw(){
+      phase += .085;
+      amp += (target - amp) * .06;
+      let d = 'M0 80';
+      for(let i=1;i<=PTS;i++){
+        const x = 1000*i/PTS, t = i/PTS;
+        const env = Math.sin(Math.PI*t);                       /* fixed ends */
+        const y = 80
+          + Math.sin(Math.PI*t*1 + phase)      * amp    * env
+          + Math.sin(Math.PI*t*2 - phase*1.7)  * amp*.4 * env
+          + Math.sin(Math.PI*t*5 + phase*2.3)  * amp*.12* env;
+        d += ' L' + x.toFixed(1) + ' ' + y.toFixed(2);
+      }
+      path.setAttribute('d', d);
+      raf = requestAnimationFrame(draw);
+    }
+    if(!reduced) draw();
+
+    /* --- ready when the display faces are in (bounded either side) --- */
+    const ready = () => { ov.classList.add('ready'); document.getElementById('ovSound').focus({preventScroll:true}); };
+    const minWait = new Promise(r => setTimeout(r, 700));
+    const fonts = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    const maxWait = new Promise(r => setTimeout(r, 2600));
+    Promise.race([Promise.all([fonts, minWait]), maxWait]).then(ready);
+
+    /* --- enter --- */
+    let gone = false;
+    function enter(withSound){
+      if(gone) return; gone = true;
+      if(withSound){ setAudio(true); pluck(0, .9); setTimeout(()=>pluck(7,.5), 140); }
+      target = withSound ? 26 : 10;                 /* one last bow stroke */
+      setTimeout(() => {
+        ov.classList.add('leaving');
+        document.body.classList.remove('overture-open');
+        dispatchEvent(new CustomEvent('locrian:enter'));
+        setTimeout(() => { cancelAnimationFrame(raf); ov.remove(); }, 1300);
+      }, reduced ? 0 : 420);
+    }
+    document.getElementById('ovSound').addEventListener('click', () => enter(true));
+    document.getElementById('ovQuiet').addEventListener('click', () => enter(false));
+    ov.addEventListener('keydown', e => {
+      if(e.key === 'Escape') enter(false);
+      if(e.key === 'Tab'){                          /* two-stop focus trap */
+        const b = [document.getElementById('ovSound'), document.getElementById('ovQuiet')];
+        if(!ov.classList.contains('ready')) return;
+        e.preventDefault();
+        (document.activeElement === b[0] ? b[1] : b[0]).focus();
+      }
+    });
+  })();
 
   /* ================= three.js string field ================= */
   /* A blocked CDN must not take the page down with it — no THREE, no string
@@ -731,10 +1379,11 @@
           const heat=Math.min(1,a/22);
           tmp.copy(GOLD).lerp(BRIGHT,heat);
           line.material.color.copy(tmp);
-          line.material.opacity=(k?.2:.8)+heat*.15;
+          line.material.opacity=((k?.2:.8)+heat*.15)*(.82+.22*(window.__flame||.8));
         });
       });
       if(embers&&!reduced){
+        embers.material.opacity=.45*(.6+.5*(window.__flame||.8));
         const pos=embers.geometry.attributes.position.array, spd=embers.geometry.userData.spd;
         for(let i=0;i<spd.length;i++){
           pos[i*3+1]+=spd[i];
@@ -774,12 +1423,20 @@
     document.querySelector('.hint').hidden = true;
   }
 
-  /* repertoire plucks — hover on desktop, tap on touch */
+  /* repertoire — hover previews the open string; a press plays the work's
+     actual opening, and the row stays lit for as long as it sounds */
+  let litTimer=0;
   document.querySelectorAll('#repList button').forEach(b=>{
     const li=b.parentElement;
-    const play=()=>{ if(!audioOn) setAudio(true); pluck(parseInt(b.dataset.note,10),.7); };
-    if(canHover) b.addEventListener('mouseenter',play);
-    b.addEventListener('click',()=>{ play(); li.classList.add('lit'); setTimeout(()=>li.classList.remove('lit'),900); });
+    if(canHover) b.addEventListener('mouseenter',()=>{ if(audioOn) pluck(parseInt(b.dataset.note,10),.35); });
+    b.addEventListener('click',()=>{
+      if(!audioOn) setAudio(true);
+      const dur=phrase(b.dataset.phrase)||.9;
+      document.querySelectorAll('#repList .lit').forEach(x=>x.classList.remove('lit'));
+      clearTimeout(litTimer);
+      li.classList.add('lit');
+      litTimer=setTimeout(()=>li.classList.remove('lit'), dur*1000);
+    });
   });
 
   /* ================= the kindling ================= */
@@ -838,9 +1495,15 @@
     if(reduced){
       gsap.set('.reveal',{opacity:1,y:0});
     } else {
-      gsap.from('h1 .word > span',{yPercent:110,duration:1.3,ease:'power4.out',stagger:.12,delay:.25});
-      gsap.from('.eyebrow, .hero .of, .hero .lede, .hint',{opacity:0,y:16,duration:1,ease:'power2.out',stagger:.1,delay:.9});
-      gsap.from('.hero-plate img',{scale:1.24,duration:2.6,ease:'power2.out'});
+      /* the hero's entrance holds for the overture; if the overlay is not
+         there (noscript rule fired, or it already left) play immediately */
+      const heroIntro = () => {
+        gsap.from('h1 .word > span',{yPercent:110,duration:1.3,ease:'power4.out',stagger:.12,delay:.15});
+        gsap.from('.eyebrow, .hero .of, .hero .lede, .hint',{opacity:0,y:16,duration:1,ease:'power2.out',stagger:.1,delay:.8});
+        gsap.from('.hero-plate img',{scale:1.24,duration:2.6,ease:'power2.out'});
+      };
+      if(document.getElementById('overture')) addEventListener('locrian:enter', heroIntro, {once:true});
+      else heroIntro();
       gsap.utils.toArray('.reveal').forEach(el=>{
         gsap.to(el,{opacity:1,y:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
       });
@@ -892,6 +1555,25 @@
         return ()=>{ tw.scrollTrigger&&tw.scrollTrigger.kill(); gsap.set(track,{x:0}); };
       });
 
+    /* the snuffing: gutter, out, smoke */
+    if(document.querySelector('.snuff')){
+      const gutter=gsap.timeline({repeat:-1,yoyo:true,defaults:{ease:'sine.inOut'}});
+      gutter.to('.sn-flame',{scaleX:.86,scaleY:1.06,rotation:2.5,duration:.42})
+            .to('.sn-flame',{scaleX:1.04,scaleY:.94,rotation:-2,duration:.5});
+      const snuff=gsap.timeline({scrollTrigger:{trigger:'.snuff',start:'top 72%',end:'top 18%',scrub:.5},
+        onUpdate:function(){ if(this.progress()>.5) gutter.pause(); else gutter.play(); }});
+      snuff.to({},{duration:1.1})
+           .to('.sn-flame',{scaleY:1.5,scaleX:.6,rotation:6,duration:.4,ease:'power1.in'})
+           .to('.sn-flame',{scaleY:.05,scaleX:.3,opacity:0,duration:.25,ease:'power3.in'},'>')
+           .to('.sn-glow',{opacity:0,scale:.55,duration:.4,ease:'power2.in'},'<')
+           .to('.sn-smoke',{opacity:.8,duration:.1},'>-.05')
+           .to('.sn-smoke',{strokeDashoffset:0,y:-14,duration:.5,ease:'power1.out'},'<')
+           .to('.sn-smoke',{opacity:0,duration:.25},'>-.1')
+           .from('.sn-line',{opacity:0,y:10,duration:.35},'<');
+    }
+
+
+      gsap.to('.flourish path',{strokeDashoffset:0,duration:1.6,ease:'power2.inOut',scrollTrigger:{trigger:'.coda',start:'top 65%'}});
       gsap.to('#stage',{opacity:.3,ease:'none',scrollTrigger:{trigger:'#ensemble',start:'top 90%',end:'top 30%',scrub:true}});
       gsap.to('#stage',{opacity:1,ease:'none',scrollTrigger:{trigger:'.coda',start:'top 75%',end:'top 25%',scrub:true}});
     }

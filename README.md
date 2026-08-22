@@ -11,6 +11,10 @@ Static. One file. No build step.
 
 ## The idea
 
+The page opens the way the concert does: an overture — dark room, one string
+humming while the fonts load, and a choice. *Enter with sound* unlocks the Web
+Audio layer for everything after it and answers with the open-string B.
+
 The hero is a playable instrument. A field of golden strings rendered in
 Three.js: drag a cursor or a finger across them and each one bows with damped
 string physics *and* sounds a note through the Web Audio API. The field is
@@ -68,6 +72,33 @@ per-slot `sizes`, `loading` and `fetchpriority` tuning alone. See
 Commons API who took each photograph and under what licence and writes that
 into the footer credits and `CREDITS.md`. It needs to run somewhere that can
 reach `upload.wikimedia.org`.
+
+## The signature moments
+
+- **The overture** — the loader is a tuning-up: a standing-wave string drawn in
+  SVG, then the choice of entering with sound or quietly.
+- **The kindling** — see below; scrolling lights the church.
+- **The dark minute** — a near-black interlude where the pointer carries a
+  candle; the words read only inside its light. On touch the flame is carried
+  for you. Keyboard, reduced-motion and no-JS readers get plain text.
+- **The snuffing** — a single candle between the Wolf Hall cards gutters and is
+  put out by the scroll, smoke curl and all.
+- **The repertoire is a listening menu** — each work plays its actual opening
+  bars, synthesised from the public-domain score. Under it all, once sound is
+  on: a drone on B breathing at a candle's pace, sparse crackle, and an inner
+  voice that climbs the Locrian scale one degree per movement — F natural, the
+  mode's diminished fifth, lands on the candlelight movement.
+- **One flame lights everything** — a single clock breathes the veil over the
+  photographs, the embers, the strings and the kindle field together.
+- **The Programme** — a docked, candlelit Spotify player with the ensemble's
+  real recordings (IDs verified in MEDIA.md).
+- **Concert mode** — *Lights down* in the nav: the gallery presents one image
+  at a time, full screen under the grade, flames guttering at the foot, the
+  Programme dock alongside. Slides are built from the gallery markup, so real
+  photography joins concert mode automatically.
+- **The engraver's details** — ghost numerals behind the movement heads, a
+  drawn flourish under *by candlelight*, film grain, themed scrollbar and
+  selection, a flickering favicon, and a 404 marked *tacet*.
 
 ## The kindling
 
