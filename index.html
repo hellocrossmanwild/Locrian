@@ -121,10 +121,12 @@
 
   .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
     padding:calc(96px + var(--safe-t)) var(--gut) calc(112px + var(--safe-b))}
-  /* No bespoke grade here — it shares .plate/.plate.vignette with the coda and
-     the candlelight bleed, so it sits in the room the same way they do rather
-     than reading as a harder rectangle laid over the string field. */
-  .hero-plate{position:absolute;inset:-6% 0}
+  /* A background, not a picture. The strings and the type are the hero;
+     this is atmosphere behind them, so it sits at low opacity rather than
+     fighting for the same foreground the strings occupy — no exposure
+     tuning was going to make a photograph read as secondary while it was
+     still rendered as a solid, fully-opaque image. */
+  .hero-plate{position:absolute;inset:-6% 0;opacity:.35}
   .hero > *{position:relative;z-index:3}
   .eyebrow{font-size:clamp(10px,2.6vw,12px);letter-spacing:.28em;text-transform:uppercase;color:var(--flame);margin-bottom:22px;line-height:1.7}
   h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(46px,13vw,124px);line-height:.96}
