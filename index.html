@@ -322,6 +322,28 @@
   .diary a:focus-visible{outline:1px solid var(--flame);outline-offset:-2px}
   @media(hover:hover){.diary a:hover .what{color:var(--flame-bright)}}
 
+  /* ===== the dark minute ===== */
+  .dark{position:relative;min-height:78svh;display:grid;place-items:center;
+    padding:clamp(90px,16vh,180px) var(--gut);background:#040308;overflow:hidden}
+  .dark-text{position:relative;z-index:2;max-width:30ch;text-align:center;
+    font-family:'Cormorant Garamond',serif;font-weight:500;
+    font-size:clamp(22px,5.4vw,36px);line-height:1.5;color:var(--ivory)}
+  .dark-text em{font-style:italic;color:var(--flame)}
+  .dark-glow{position:absolute;z-index:1;left:0;top:0;width:340px;height:340px;
+    margin:-170px 0 0 -170px;pointer-events:none;opacity:0;
+    background:radial-gradient(circle,rgba(224,164,88,.16) 0%,rgba(224,164,88,.05) 42%,rgba(224,164,88,0) 70%);
+    transform:translate(-999px,-999px)}
+  /* JS arms the veil: text faint everywhere except inside the carried light */
+  .dark.lit-by-hand .dark-text{
+    -webkit-mask-image:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%),#000 0%,rgba(0,0,0,.92) 45%,rgba(0,0,0,.07) 78%);
+    mask-image:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%),#000 0%,rgba(0,0,0,.92) 45%,rgba(0,0,0,.07) 78%);
+  }
+  .dark.lit-by-hand .dark-glow{opacity:1}
+  @media (prefers-reduced-motion: reduce){
+    .dark.lit-by-hand .dark-text{-webkit-mask-image:none;mask-image:none}
+    .dark.lit-by-hand .dark-glow{opacity:0}
+  }
+
   /* ===== the snuffing ===== */
   .snuff{display:grid;justify-items:center;gap:18px;margin:clamp(6px,2vh,20px) 0 clamp(30px,6vh,58px)}
   .snuff svg{overflow:visible}
@@ -511,6 +533,17 @@
       </figure>
     </div>
     <p class="swipe-hint">Swipe through the hall →</p>
+  </section>
+
+  <!-- Interlude — the dark minute. On a fine pointer you carry the light
+       yourself; on touch the flame is carried for you, drifting across the
+       words. Without JavaScript (or with reduced motion) the text simply
+       reads, plainly lit. -->
+  <section class="dark" id="veiled" aria-label="An interlude in the dark">
+    <div class="dark-glow" aria-hidden="true"></div>
+    <p class="dark-text">There is a minute before every concert when the house is
+      dark and the hall belongs to no one. The players wait. The flames breathe.
+      <em>Carry a light through, and take your seat.</em></p>
   </section>
 
   <section class="movement" id="screen">
@@ -745,6 +778,52 @@
     o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
     o1.start(now); o2.start(now); o1.stop(now+2); o2.stop(now+2);
   }
+  /* ================= the dark minute ================= */
+  (function darkMinute(){
+    const sec = document.getElementById('veiled');
+    if(!sec || reduced) return;                       /* reduced: plainly lit */
+    const glow = sec.querySelector('.dark-glow');
+    const text = sec.querySelector('.dark-text');
+    sec.classList.add('lit-by-hand');
+    let tx=-999, ty=-999, x=-999, y=-999, drift=!canHover, t0=Math.random()*7;
+    if(canHover){
+      sec.addEventListener('pointermove', e => {
+        const r = sec.getBoundingClientRect();
+        tx = e.clientX - r.left; ty = e.clientY - r.top;
+      });
+      sec.addEventListener('pointerleave', () => { tx = -999; ty = -999; });
+    }
+    let raf=0;
+    function tick(){
+      raf = requestAnimationFrame(tick);
+      if(drift){
+        /* the flame is carried for you: a slow figure over the words */
+        t0 += .004;
+        const r = sec.getBoundingClientRect();
+        const tr = text.getBoundingClientRect();
+        const cx = tr.left - r.left + tr.width/2, cy = tr.top - r.top + tr.height/2;
+        tx = cx + Math.sin(t0*1.7) * tr.width * .42;
+        ty = cy + Math.sin(t0*2.3 + 1.2) * tr.height * .5;
+      }
+      /* carried, not glued: the light lags the hand like a real flame */
+      x += (tx - x) * .09; y += (ty - y) * .09;
+      /* mask coords live in the text's own box, not the section's */
+      const sr = sec.getBoundingClientRect(), tb = text.getBoundingClientRect();
+      sec.style.setProperty('--mx', (x - (tb.left - sr.left)).toFixed(1) + 'px');
+      sec.style.setProperty('--my', (y - (tb.top - sr.top)).toFixed(1) + 'px');
+      glow.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + (.9 + .2*(window.__flame||.8)).toFixed(3) + ')';
+    }
+    /* run only while the section is near the viewport */
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(es => {
+        es.forEach(e => {
+          if(e.isIntersecting && !raf) tick();
+          else if(!e.isIntersecting && raf){ cancelAnimationFrame(raf); raf = 0; }
+        });
+      }, {rootMargin:'80px'}).observe(sec);
+    } else tick();
+  })();
+
   /* ================= the flame clock ================= */
   /* One flame lights the whole page. Everything that glows — the veil over
      the photographs, the embers, the strings, the kindle field — breathes
