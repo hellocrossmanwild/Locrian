@@ -163,6 +163,28 @@
   .fact .k{font-family:'Cormorant Garamond',serif;font-size:clamp(25px,6vw,30px);color:var(--flame);line-height:1.1}
   .fact .v{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--smoke);margin-top:4px}
 
+  /* ===== concert mode ===== */
+  body.concert-open{overflow:hidden}
+  #concert{position:fixed;inset:0;z-index:78;background:#030207}
+  .concert-stage{position:absolute;inset:0}
+  .concert-stage .plate{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease}
+  .concert-stage .plate.on{opacity:1}
+  .concert-stage .plate img{filter:saturate(.42) contrast(1.16) brightness(.5) sepia(.34)}
+  #concert:not(.still) .concert-stage .plate img{animation:kenburns 18s ease-in-out infinite alternate}
+  @keyframes kenburns{from{transform:scale(1.06) translate(0,0)}to{transform:scale(1.14) translate(-1.6%,1.2%)}}
+  .concert-stage::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(75% 60% at 50% 44%,rgba(0,0,0,0) 30%,rgba(3,2,7,.72) 100%)}
+  .concert-cap{position:absolute;left:clamp(18px,5vw,60px);bottom:calc(clamp(70px,12vh,110px) + var(--safe-b));z-index:3;display:grid;gap:4px;max-width:34ch}
+  .concert-cap b{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,5vw,38px);line-height:1.1;color:var(--ivory)}
+  .concert-cap span{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--smoke)}
+  .concert-flames{position:absolute;left:0;right:0;bottom:0;height:90px;z-index:2;pointer-events:none}
+  .concert-ui{position:absolute;right:clamp(14px,3vw,40px);top:calc(clamp(14px,3vh,30px) + var(--safe-t));z-index:4;display:flex;gap:10px}
+  .concert-ui button{all:unset;cursor:pointer;font-family:inherit;min-height:46px;min-width:46px;display:inline-flex;align-items:center;justify-content:center;
+    padding:0 16px;border:1px solid var(--hairline);border-radius:2px;color:var(--ivory);
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;transition:.3s;background:rgba(7,6,11,.5)}
+  .concert-ui button:hover{border-color:var(--flame);color:var(--flame)}
+  .concert-ui button:focus-visible{outline:1px solid var(--flame-bright);outline-offset:3px}
+
   /* ===== the programme dock ===== */
   .navlink{all:unset;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--smoke);transition:color .3s}
   .navlink:hover{color:var(--ivory)}
@@ -221,7 +243,7 @@
   .kindle{position:relative;background:var(--nave)}
   .kindle-pin{position:relative;height:92svh;overflow:hidden;display:grid;place-items:center}
   .kindle-field{position:absolute;inset:0}
-  .kindle-field i{
+  .kindle-field i,.concert-flames i{
     position:absolute;width:5px;height:9px;
     border-radius:50%/62% 62% 38% 38%;
     background:radial-gradient(circle at 50% 32%,#FFE3AE 0%,#E0A458 52%,rgba(224,164,88,0) 78%);
@@ -442,6 +464,7 @@
     <a href="#candlelight">Candlelight</a>
     <a href="#screen">On Screen</a>
     <button class="navlink" id="progBtn" type="button" aria-expanded="false" aria-controls="prog">Programme</button>
+    <button class="navlink" id="lightsBtn" type="button" aria-pressed="false">Lights down</button>
     <a class="book" href="#concerts">Concerts</a>
   </nav>
   <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="sheet" aria-label="Open menu"><i></i><i></i></button>
@@ -456,6 +479,7 @@
     <a href="#concerts"><span class="n">Book</span>Concerts</a>
   </nav>
   <button class="sheet-prog" id="progBtnM" type="button">♪ The programme — listen while you read</button>
+  <button class="sheet-prog" id="lightsBtnM" type="button">☾ Lights down — the room by candlelight</button>
   <p class="foot">St Martin-in-the-Fields · London</p>
 </div>
 
@@ -684,6 +708,23 @@
 
 </main>
 
+<!-- ================= concert mode =================
+     Lights down. The page dims to the room itself: the gallery's images,
+     one at a time and full screen under the candlelight grade, a line of
+     guttering flames at the foot, the programme dock alongside for sound.
+     Slides are built from the gallery markup, so new photography joins
+     concert mode with no extra work. -->
+<div id="concert" hidden role="dialog" aria-modal="true" aria-label="Concert mode — the room by candlelight">
+  <div class="concert-stage"></div>
+  <p class="concert-cap"><b></b><span></span></p>
+  <div class="concert-flames" aria-hidden="true"></div>
+  <div class="concert-ui">
+    <button id="ccPrev" type="button" aria-label="Previous image">&#8592;</button>
+    <button id="ccNext" type="button" aria-label="Next image">&#8594;</button>
+    <button id="ccClose" type="button">Lights up</button>
+  </div>
+</div>
+
 <!-- ================= the programme dock =================
      The ensemble's recordings, streamed by Spotify while you browse.
      Nothing loads until a recording is chosen; the frame only ever plays
@@ -847,6 +888,72 @@
     o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
     o1.start(now); o2.start(now); o1.stop(now+2); o2.stop(now+2);
   }
+  /* ================= concert mode ================= */
+  (function concertMode(){
+    const room = document.getElementById('concert');
+    if(!room) return;
+    const stage = room.querySelector('.concert-stage');
+    const capB = room.querySelector('.concert-cap b');
+    const capS = room.querySelector('.concert-cap span');
+    const btns = [document.getElementById('lightsBtn'), document.getElementById('lightsBtnM')].filter(Boolean);
+    let built=false, idx=0, timer=0, slides=[];
+    if(reduced) room.classList.add('still');
+    function build(){
+      built=true;
+      document.querySelectorAll('#track .frame').forEach(f=>{
+        const img=f.querySelector('img'), cap=f.querySelector('.cap');
+        const fig=document.createElement('figure'); fig.className='plate';
+        const im=document.createElement('img');
+        im.src=img.currentSrc||img.src;
+        if(img.srcset) im.srcset=img.srcset;
+        im.sizes='100vw'; im.alt=''; im.loading='lazy'; im.decoding='async';
+        fig.appendChild(im); stage.appendChild(fig);
+        slides.push({fig, b:cap?cap.childNodes[0].textContent:'', s:cap?cap.childNodes[1].textContent:''});
+      });
+      /* a low rank of flames along the foot of the room */
+      const fl=room.querySelector('.concert-flames');
+      let seed=23;
+      const rnd=()=> (seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff;
+      for(let i=0;i<16;i++){
+        const f=document.createElement('i');
+        f.style.left=(2+rnd()*96).toFixed(2)+'%';
+        f.style.top=(30+rnd()*52).toFixed(2)+'%';
+        f.style.setProperty('--s',(0.9+rnd()*1.3).toFixed(2));
+        f.style.setProperty('--d',(-rnd()*3).toFixed(2)+'s');
+        fl.appendChild(f);
+      }
+    }
+    function show(i){
+      idx=(i+slides.length)%slides.length;
+      slides.forEach((sl,k)=>sl.fig.classList.toggle('on',k===idx));
+      capB.textContent=slides[idx].b; capS.textContent=slides[idx].s;
+    }
+    function arm(){ clearInterval(timer); if(!reduced) timer=setInterval(()=>show(idx+1), 8000); }
+    function setOpen(open){
+      if(open && !built) build();
+      room.hidden=!open;
+      document.body.classList.toggle('concert-open', open);
+      btns.forEach(b=>b.setAttribute('aria-pressed', open?'true':'false'));
+      if(open){
+        show(idx); arm();
+        document.getElementById('ccClose').focus({preventScroll:true});
+        /* the dock plays on over the dark — offer it if it isn't already out */
+        const dock=document.getElementById('prog');
+        if(dock && dock.hidden){ dock.hidden=false; }
+      } else { clearInterval(timer); }
+    }
+    btns.forEach(b=>b.addEventListener('click',()=>setOpen(room.hidden)));
+    document.getElementById('ccClose').addEventListener('click',()=>setOpen(false));
+    document.getElementById('ccPrev').addEventListener('click',()=>{show(idx-1);arm();});
+    document.getElementById('ccNext').addEventListener('click',()=>{show(idx+1);arm();});
+    addEventListener('keydown',e=>{
+      if(room.hidden) return;
+      if(e.key==='Escape') setOpen(false);
+      if(e.key==='ArrowLeft'){show(idx-1);arm();}
+      if(e.key==='ArrowRight'){show(idx+1);arm();}
+    });
+  })();
+
   /* ================= the programme dock ================= */
   (function programme(){
     const dock = document.getElementById('prog');
