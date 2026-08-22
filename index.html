@@ -193,6 +193,29 @@
   .card h3{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(23px,5.6vw,32px);line-height:1.1}
   .card p{color:var(--body);font-size:15px}
   .card .label{margin-top:auto;padding-top:6px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--smoke)}
+  .player{margin-top:clamp(26px,4vh,44px);max-width:44rem}
+  .player iframe{display:block;width:100%;border:1px solid var(--hairline);border-radius:12px}
+  .facade{display:flex;align-items:center;gap:clamp(14px,3vw,20px);padding:16px 18px;min-height:76px;
+    border:1px solid var(--hairline);border-radius:12px;background:var(--shadow);
+    text-decoration:none;color:inherit;transition:border-color .3s,background .3s}
+  .facade:focus-visible{outline:1px solid var(--flame);outline-offset:3px}
+  @media(hover:hover){.facade:hover{border-color:rgba(224,164,88,.45);background:#191322}}
+  .facade .play{flex:none;width:38px;height:38px;border-radius:50%;background:var(--flame);
+    position:relative;transition:background .3s}
+  .facade .play::after{content:"";position:absolute;top:50%;left:52%;transform:translate(-50%,-50%);
+    border-style:solid;border-width:7px 0 7px 11px;border-color:transparent transparent transparent var(--nave)}
+  @media(hover:hover){.facade:hover .play{background:var(--flame-bright)}}
+  .facade .meta{display:grid;gap:3px;min-width:0}
+  .facade .work{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,4.4vw,22px);line-height:1.2}
+  .facade .who{font-size:12px;color:var(--smoke)}
+  .facade .src{margin-left:auto;flex:none;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--smoke)}
+  @media(max-width:520px){.facade .src{display:none}}
+  .player figcaption{position:static;padding:0;margin-top:10px;font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:14px;letter-spacing:0;text-transform:none;color:var(--smoke)}
+  .player + .listen-row{margin-top:clamp(20px,3vh,30px)}
+  .press{margin:clamp(24px,4vh,36px) 0;padding-left:clamp(16px,3vw,24px);border-left:1px solid var(--hairline)}
+  .press p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(19px,4.4vw,24px);line-height:1.35;color:var(--ivory)}
+  .press cite{display:block;margin-top:10px;font-family:'Archivo',sans-serif;font-style:normal;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--flame)}
   .listen-row{display:flex;flex-direction:column;gap:12px;margin-top:clamp(26px,4vh,44px)}
   @media(min-width:521px){.listen-row{flex-direction:row;flex-wrap:wrap;gap:16px}}
   .btn{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;min-height:52px;padding:0 26px;border-radius:2px;font-weight:600;transition:.3s}
@@ -299,6 +322,12 @@
           <p><strong>Formed by cellist Justin Pearson</strong>, the Locrian Ensemble of London draws together some of the capital's most prominent string soloists — players whose individual flair shapes every performance of the great chamber and orchestral repertoire.</p>
           <p>The ensemble established its long-running concert series at <strong>St Martin-in-the-Fields</strong> on Trafalgar Square, and has taken theatre concerts and festival performances across Britain, alongside an extensive catalogue of recordings and broadcasts.</p>
           <p>Justin Pearson is principal cellist of the National Symphony Orchestra UK and an Associate of the Royal Academy of Music — and the Locrian sound carries that pedigree: precise, expressive, and unmistakably live.</p>
+          <blockquote class="press">
+            <p>Justin Pearson's powerful, roomy tone… stunning advocacy, combining
+              lyricism of heartfelt intensity with an acute sensitivity to the
+              music's harmonic progress.</p>
+            <cite>The Strad</cite>
+          </blockquote>
           <div class="facts">
             <div class="fact"><div class="k">St Martin's</div><div class="v">Home of the candlelight series</div></div>
             <div class="fact"><div class="k">No. 1</div><div class="v">Classical chart — Wolf Hall</div></div>
@@ -310,7 +339,7 @@
             <img data-slot="movement-i-a" loading="lazy" decoding="async" sizes="(max-width:900px) 46vw, 42vw"
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Old_Cello_Abstract_%2828452403987%29.jpg/1280px-Old_Cello_Abstract_%2828452403987%29.jpg"
               srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Old_Cello_Abstract_%2828452403987%29.jpg/960px-Old_Cello_Abstract_%2828452403987%29.jpg 960w, https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Old_Cello_Abstract_%2828452403987%29.jpg/1280px-Old_Cello_Abstract_%2828452403987%29.jpg 1280w" alt="Close detail of a cello's strings crossing the bridge">
-            <figcaption>The founder's instrument</figcaption>
+            <figcaption>Ruggieri, Cremona, 1695 — the founder's cello</figcaption>
           </figure>
           <figure class="plate wide reveal" data-par="0.1">
             <img data-slot="movement-i-b" loading="lazy" decoding="async" sizes="(max-width:900px) 46vw, 42vw"
@@ -395,6 +424,24 @@
           </div>
         </article>
       </div>
+      <!-- The ensemble's own playing, streamed by Spotify — no audio file to
+           host and no licensing question. Nothing third-party loads until the
+           reader asks for it: until then this is a link that works with the
+           script off, and a blocked embed can never paint a white hole in the
+           page. See MEDIA.md. -->
+      <figure class="player reveal">
+        <a class="facade" href="https://open.spotify.com/track/5Nknri9YPCoKuvj50DSbYw"
+           target="_blank" rel="noopener"
+           data-embed="https://open.spotify.com/embed/track/5Nknri9YPCoKuvj50DSbYw?theme=0">
+          <span class="play" aria-hidden="true"></span>
+          <span class="meta">
+            <span class="work">‘The Mirror and the Light’</span>
+            <span class="who">Debbie Wiseman — played by the ensemble</span>
+          </span>
+          <span class="src">Play on Spotify</span>
+        </a>
+        <figcaption>From <em>Wolf Hall: The Mirror and The Light</em>, Silva Screen Records, 2024.</figcaption>
+      </figure>
       <div class="listen-row reveal">
         <a class="btn gold" href="https://music.apple.com/gb/album/wolf-hall-the-mirror-and-the-light/1781149991" target="_blank" rel="noopener">Listen to the score</a>
         <a class="btn ghost" href="#concerts">Hear it live</a>
@@ -693,6 +740,24 @@
     const play=()=>{ if(!audioOn) setAudio(true); pluck(parseInt(b.dataset.note,10),.7); };
     if(canHover) b.addEventListener('mouseenter',play);
     b.addEventListener('click',()=>{ play(); li.classList.add('lit'); setTimeout(()=>li.classList.remove('lit'),900); });
+  });
+
+  /* ================= streaming embed ================= */
+  /* Swap the facade for the real player on click. Anything goes wrong —
+     no script, a blocked frame — and the link opens Spotify as normal. */
+  document.querySelectorAll('.facade').forEach(a => {
+    a.addEventListener('click', e => {
+      const src = a.dataset.embed;
+      if(!src || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+      e.preventDefault();
+      const frame = document.createElement('iframe');
+      frame.src = src;
+      frame.height = 152;
+      frame.title = a.querySelector('.work').textContent + ' on Spotify';
+      frame.loading = 'lazy';
+      frame.allow = 'encrypted-media; clipboard-write; fullscreen; picture-in-picture';
+      a.replaceWith(frame);
+    });
   });
 
   /* ================= GSAP ================= */

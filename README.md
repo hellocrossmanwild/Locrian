@@ -69,6 +69,18 @@ Commons API who took each photograph and under what licence and writes that
 into the footer credits and `CREDITS.md`. It needs to run somewhere that can
 reach `upload.wikimedia.org`.
 
+## Sound
+
+Movement IV carries the ensemble's actual playing: ‘The Mirror and the Light’
+from Debbie Wiseman's *Wolf Hall* score, streamed by Spotify. Nothing loads
+from Spotify until the reader clicks — until then it is a facade in the page's
+own palette, and a plain link if the script never runs. That keeps a third
+party off the critical path and means a blocked embed can never paint a white
+box into a black page.
+
+Everything researched — recordings, photography sources, verified facts, and
+one unresolved contradiction — is in [`MEDIA.md`](MEDIA.md).
+
 ## Design system
 
 Defined as custom properties at the top of `index.html`.
@@ -147,6 +159,12 @@ changes.
 Vietnamese cockfighting streaming site. Worth recovering or replacing early —
 it settles the point above.
 
-**4. Nice to have.** Real audio excerpts instead of synthesised plucks. The
-share card at `assets/og.jpg` is typographic — a photograph of the ensemble by
-candlelight would do more work.
+**4. Ask Justin when the ensemble was formed.** His own site says he formed it
+in 1985; Apple Music Classical and a 2019 concert listing both say 1995. The
+page states no year, which is the safe position, but a founding year belongs on
+a page like this. See [`MEDIA.md`](MEDIA.md).
+
+**5. Nice to have.** The share card at `assets/og.jpg` is typographic — a
+photograph of the ensemble by candlelight would do more work. A second
+streaming embed for *Mozart by Candlelight*, the ensemble's live recording made
+at St Martin's, if a streaming link for it turns up.

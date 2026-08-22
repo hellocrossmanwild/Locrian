@@ -51,6 +51,12 @@ node tools/set-image.mjs hero assets/hero-960.jpg assets/hero-1280.jpg assets/he
 decorative — they sit behind text and are `aria-hidden`, so they keep an empty
 `alt`. Every other slot is content and wants a real description.
 
+**Captions too.** The `<figcaption>` on each plate describes the placeholder
+currently in it — “Aged spruce” means the stock photograph, not anything of
+Justin's. Rewrite the caption when you swap the picture. The one exception is
+Movement I's first plate, which names his actual instrument: a 1695 Francesco
+Ruggieri.
+
 **Sizes.** 1600–1920px on the long edge is plenty; the grade crushes fine
 detail anyway. JPEG at quality ~80. Everything under `/assets` is served
 `immutable` for a year (see `vercel.json`), so change the filename when you
