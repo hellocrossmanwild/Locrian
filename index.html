@@ -121,15 +121,12 @@
 
   .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
     padding:calc(96px + var(--safe-t)) var(--gut) calc(112px + var(--safe-b))}
-  /* Shares .plate/.plate.vignette's overlay and edge-fade with the coda and
-     the candlelight bleed — same recipe, so it sits in the room the same way
-     they do. The one thing it doesn't share: this placeholder is a bright,
-     evenly-lit interior shot, and the same exposure that reads as moody on a
-     dark night photo just reads as a lit rectangle on a bright one. Dialled
-     down to match how dim the room actually is, not how bright the source
-     photo was. */
-  .hero-plate{position:absolute;inset:-6% 0}
-  .hero-plate img{filter:saturate(.42) contrast(1.2) brightness(.38) sepia(.34)}
+  /* A background, not a picture. The strings and the type are the hero;
+     this is atmosphere behind them, so it sits at low opacity rather than
+     fighting for the same foreground the strings occupy — no exposure
+     tuning was going to make a photograph read as secondary while it was
+     still rendered as a solid, fully-opaque image. */
+  .hero-plate{position:absolute;inset:-6% 0;opacity:.35}
   .hero > *{position:relative;z-index:3}
   .eyebrow{font-size:clamp(10px,2.6vw,12px);letter-spacing:.28em;text-transform:uppercase;color:var(--flame);margin-bottom:22px;line-height:1.7}
   h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(46px,13vw,124px);line-height:.96}
