@@ -72,6 +72,11 @@
   figcaption{position:absolute;left:0;bottom:0;z-index:3;padding:12px 16px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,231,208,.6)}
 
   #stage{position:fixed;inset:0;z-index:1;pointer-events:none}
+  #flamelight{position:fixed;inset:-12%;z-index:55;pointer-events:none;opacity:.6;
+    background:
+      radial-gradient(58% 44% at 50% 46%,rgba(224,164,88,.075) 0%,rgba(224,164,88,.028) 45%,rgba(224,164,88,0) 72%),
+      radial-gradient(120% 100% at 50% 118%,rgba(110,38,52,.05) 0%,rgba(110,38,52,0) 60%);
+    will-change:opacity}
   #stage::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 110%, rgba(224,164,88,.14), transparent 55%)}
   #strings{position:absolute;inset:0;display:block;width:100%;height:100%}
 
@@ -351,6 +356,10 @@
 <noscript><style>#overture{display:none}</style></noscript>
 
 <div id="stage" aria-hidden="true"><canvas id="strings"></canvas></div>
+
+<!-- the candle's veil: one warm bloom over the whole room, breathing on the
+     flame clock. Pure opacity per frame — compositor only. -->
+<div id="flamelight" aria-hidden="true"></div>
 
 <header id="topbar">
   <a class="wordmark" href="#top">Locrian<span>.</span></a>
@@ -700,6 +709,30 @@
     o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
     o1.start(now); o2.start(now); o1.stop(now+2); o2.stop(now+2);
   }
+  /* ================= the flame clock ================= */
+  /* One flame lights the whole page. Everything that glows — the veil over
+     the photographs, the embers, the strings, the kindle field — breathes
+     against this single clock, so the room reads as lit by one real candle
+     rather than a set of independent CSS loops. */
+  window.__flame = .8;
+  (function flameClock(){
+    const veil = document.getElementById('flamelight');
+    const kindleField = document.getElementById('kindleField');
+    if(reduced){ if(veil) veil.style.opacity = .5; return; }
+    let t = Math.random()*100;
+    (function tick(){
+      requestAnimationFrame(tick);
+      t += .016;
+      const k = .72
+        + .16*Math.sin(6.2832*.23*t)
+        + .08*Math.sin(6.2832*.57*t + 1.3)
+        + .05*Math.sin(6.2832*1.31*t + 4.1);
+      window.__flame = k;
+      if(veil) veil.style.opacity = (.28 + .5*k).toFixed(3);
+      if(kindleField) kindleField.style.opacity = (.72 + .28*k).toFixed(3);
+    })();
+  })();
+
   /* ================= voices & phrases ================= */
   /* Each repertoire row plays its actual opening — a couple of bars,
      synthesised from the public-domain score. No files, no licences. */
@@ -1026,10 +1059,11 @@
           const heat=Math.min(1,a/22);
           tmp.copy(GOLD).lerp(BRIGHT,heat);
           line.material.color.copy(tmp);
-          line.material.opacity=(k?.2:.8)+heat*.15;
+          line.material.opacity=((k?.2:.8)+heat*.15)*(.82+.22*(window.__flame||.8));
         });
       });
       if(embers&&!reduced){
+        embers.material.opacity=.45*(.6+.5*(window.__flame||.8));
         const pos=embers.geometry.attributes.position.array, spd=embers.geometry.userData.spd;
         for(let i=0;i<spd.length;i++){
           pos[i*3+1]+=spd[i];
